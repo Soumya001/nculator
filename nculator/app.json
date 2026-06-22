@@ -25,7 +25,6 @@
       "versionCode": 1
     },
     "plugins": [
-      "expo-haptics",
       [
         "expo-build-properties",
         {
@@ -34,7 +33,7 @@
       ]
     ],
     "extra": {
-      "eas": { "projectId": "your-eas-project-id" }
+      "eas": { "projectId": "ae6177de-db97-4acd-b68b-352df55c2720" }
     }
   }
 }

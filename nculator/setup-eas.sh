@@ -1,11 +1,7 @@
 #!/bin/bash
-# Setup EAS project — creates/links project and writes ID to app.json
 set -e
-
-echo "=== EAS Project Setup ==="
+echo "=== EAS Auth Check ==="
 eas whoami
-echo "Initialising EAS project (creates if new, links if existing)..."
-eas init --non-interactive
-echo "=== app.json after init ==="
-cat app.json
-echo "=== Setup complete ==="
+echo "Project ID in app.json:"
+python3 -c "import json; d=json.load(open('app.json')); print(d['expo']['extra']['eas']['projectId'])"
+echo "=== Ready to build ==="
