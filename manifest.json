@@ -1,0 +1,13 @@
+{
+  "name": "Bedside — Clinical Calculators",
+  "short_name": "Bedside",
+  "description": "12 bedside calculators for nurses and doctors. Drug dose, IV drip, pump rate, weight-based dosing, infusion time, unit conversion, SpO₂ assessment, titration, cannula gauge, creatinine clearance, reconstitution, and BSA.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0d",
+  "theme_color": "#0a0a0d",
+  "icons": [
+    { "src": "uploads/bedside-icon.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
