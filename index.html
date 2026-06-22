@@ -75,6 +75,7 @@
     <div class="loader"></div>
   </div>
   <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/bedside/sw.js');
     setTimeout(() => { window.location.replace('bedside-bundle.html'); }, 800);
   </script>
 </body>
