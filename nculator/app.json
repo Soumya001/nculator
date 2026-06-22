@@ -26,6 +26,7 @@
       "versionCode": 1
     },
     "plugins": [
+      "./plugins/withKotlinVersion",
       [
         "expo-build-properties",
         {
