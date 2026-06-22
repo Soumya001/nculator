@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+<link rel="manifest" href="manifest.json">
+<template id="__bundler_thumbnail"><svg viewBox="0 0 80 56" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="56" fill="#0a0a0d"/><rect x="20" y="10" width="40" height="36" rx="8" fill="#1a1c25"/><rect x="26" y="18" width="28" height="4" rx="2" fill="#4c8dff" opacity=".7"/><rect x="26" y="26" width="20" height="3" rx="1.5" fill="#8891a4" opacity=".5"/><rect x="26" y="32" width="24" height="3" rx="1.5" fill="#8891a4" opacity=".4"/></svg></template>
+<meta name="theme-color" content="#0a0a0d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bedside">
+<link rel="apple-touch-icon" href="uploads/bedside-icon.png">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;-webkit-text-size-adjust:100%;background:#000;overscroll-behavior:none;}
+  .ms{font-family:'Material Symbols Rounded';font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;}
+  ::-webkit-scrollbar{width:0;height:0;}
+  input::placeholder{opacity:.38;}
+  input,select{-webkit-tap-highlight-color:transparent;}
+  input:focus,select:focus{outline:none!important;border:none!important;box-shadow:none!important;}
+  input{caret-color:var(--tc,#4c8dff);caret-shape:bar;}
+  /* hide scrollbars app-wide */
+  *::-webkit-scrollbar{display:none;}
+  *{scrollbar-width:none;-ms-overflow-style:none;}
+
+  @keyframes slideUp{from{transform:translate3d(100%,0,0);}to{transform:translate3d(0,0,0);}}
+  @keyframes slideDown{from{transform:translate3d(0,0,0);}to{transform:translate3d(100%,0,0);}}
+  @keyframes scrimIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes scrimOut{from{opacity:1;}to{opacity:0;}}
+  @keyframes cardIn{from{transform:translate3d(0,24px,0);}to{transform:translate3d(0,0,0);}}
+  @keyframes tabIn{from{transform:translate3d(0,10px,0);}to{transform:translate3d(0,0,0);}}
+  @keyframes barPop{
+    0%{transform:translate3d(0,32px,0) scale3d(.88,.88,1);opacity:0;}
+    55%{transform:translate3d(0,-6px,0) scale3d(1.03,1.03,1);opacity:1;}
+    78%{transform:translate3d(0,2px,0) scale3d(.99,.99,1);}
+    100%{transform:translate3d(0,0,0) scale3d(1,1,1);opacity:1;}
+  }
+  @keyframes barFade{
+    0%{opacity:1;transform:translate3d(0,0,0);}
+    80%{opacity:1;}
+    100%{opacity:0;transform:translate3d(0,8px,0);}
+  }
+  @keyframes fabItemIn{
+    from{transform:translate3d(0,16px,0) scale3d(.7,.7,1);opacity:0;}
+    to{transform:translate3d(0,0,0) scale3d(1,1,1);opacity:1;}
+  }
+  @keyframes sheetUp{from{transform:translate3d(0,60px,0);opacity:0;}to{transform:translate3d(0,0,0);opacity:1;}}
+  @keyframes numIn{from{transform:translate3d(0,10px,0);opacity:0;}to{transform:translate3d(0,0,0);opacity:1;}}
+  @keyframes haloFade{from{opacity:0;}to{opacity:1;}}
+  @keyframes iconPop{from{transform:scale3d(.6,.6,1);opacity:0;}to{transform:scale3d(1,1,1);opacity:1;}}
+
+  /* Nav tab switch animations */
+  @keyframes tab-home{0%{transform:scale(.65) translateY(5px);opacity:0;}60%{transform:scale(1.18) translateY(-2px);opacity:1;}100%{transform:scale(1) translateY(0);opacity:1;}}
+  @keyframes tab-calc{0%{transform:scale(.55) rotate(-15deg);opacity:0;}60%{transform:scale(1.2) rotate(4deg);opacity:1;}100%{transform:scale(1) rotate(0deg);opacity:1;}}
+  @keyframes tab-book{0%{transform:scale(.6) rotateX(-40deg);opacity:0;}65%{transform:scale(1.15) rotateX(4deg);opacity:1;}100%{transform:scale(1) rotateX(0deg);opacity:1;}}
+  @keyframes tab-gear{0%{transform:scale(.6) rotate(-60deg);opacity:0;}65%{transform:scale(1.12) rotate(6deg);opacity:1;}100%{transform:scale(1) rotate(0deg);opacity:1;}}
+
+  /* Per-tool icon animations */
+  @keyframes ic-dose{0%,100%{transform:rotate(0);}15%{transform:rotate(-18deg);}35%{transform:rotate(14deg);}55%{transform:rotate(-8deg);}72%{transform:rotate(5deg);}85%{transform:rotate(-2deg);}}
+  @keyframes ic-drip{0%{transform:translateY(-14px) scale(.6);opacity:0;}55%{transform:translateY(5px) scale(1.1);opacity:1;}78%{transform:translateY(-3px) scale(.97);}100%{transform:translateY(0) scale(1);}}
+  @keyframes ic-pump{0%{transform:rotate(-30deg) scale(.5);opacity:0;}70%{transform:rotate(8deg) scale(1.08);}100%{transform:rotate(0deg) scale(1);opacity:1;}}
+  @keyframes ic-weight{0%{transform:translateY(-22px) scale(.6);opacity:0;}60%{transform:translateY(7px) scale(1.1);opacity:1;}80%{transform:translateY(-4px) scale(.96);}100%{transform:translateY(0) scale(1);}}
+  @keyframes ic-clock{0%{transform:rotate(-200deg) scale(.5);opacity:0;}75%{transform:rotate(8deg) scale(1.06);opacity:1;}100%{transform:rotate(0deg) scale(1);}}
+  @keyframes ic-sync{0%{transform:rotate(0deg) scale(.5);opacity:0;}65%{transform:rotate(390deg) scale(1.1);opacity:1;}100%{transform:rotate(360deg) scale(1);}}
+  @keyframes ic-breathe{0%{transform:scale(.4);opacity:0;}55%{transform:scale(1.18);opacity:1;}78%{transform:scale(.94);}100%{transform:scale(1);}}
+  @keyframes ic-heart{0%{transform:scale(.7);opacity:0;}20%{transform:scale(1.25);opacity:1;}35%{transform:scale(.95);}50%{transform:scale(1.15);}65%,100%{transform:scale(1);}}
+  @keyframes ic-cannula{0%{transform:translateX(-28px) scale(.7);opacity:0;}65%{transform:translateX(4px) scale(1.06);opacity:1;}100%{transform:translateX(0) scale(1);}}
+</style>
+</helmet>
+
+<div style="{{ rootStyle }}">
+<div style="{{ appStyle }}">
+
+  <!-- STATUS BAR -->
+  <div style="flex:none;height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 20px;">
+    <span style="font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--text);">9:30</span>
+    <div style="display:flex;align-items:center;gap:7px;color:var(--muted);">
+      <span class="ms" style="font-size:16px;">signal_cellular_alt</span>
+      <span class="ms" style="font-size:16px;">wifi</span>
+      <span class="ms" style="font-size:17px;">battery_full</span>
+    </div>
+  </div>
+
+  <!-- TOP APP BAR -->
+  <header style="flex:none;display:flex;align-items:center;gap:12px;padding:6px 14px 12px;">
+    <button onClick="{{ openProfile }}" style="{{ iconBadgeStyle }}" style-hover="border-color:var(--primary);">
+      <img src="uploads/bedside-icon.png" style="width:34px;height:34px;object-fit:contain;" alt="Bedside" />
+    </button>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:19px;font-weight:700;letter-spacing:-.015em;color:var(--text);">Bedside</div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:1px;">{{ barSub }}</div>
+    </div>
+    <button onClick="{{ toggleTheme }}" style="flex:none;height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--border);background:var(--s2);display:flex;align-items:center;gap:7px;cursor:pointer;" style-hover="border-color:var(--primary);">
+      <span class="ms" style="font-size:20px;color:var(--muted);">{{ themeIcon }}</span>
+      <span style="font-size:12.5px;font-weight:600;color:var(--muted);">{{ themeLabel }}</span>
+    </button>
+  </header>
+
+  <!-- MAIN CONTENT + OVERLAY CONTAINER -->
+  <div style="flex:1;position:relative;overflow:hidden;">
+
+    <!-- TAB SCROLL CONTENT (padding-bottom gives clearance above nav) -->
+    <div style="height:100%;overflow-y:auto;overflow-x:hidden;padding:0 16px 32px;-webkit-overflow-scrolling:touch;">
+
+      <!-- HOME TAB -->
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="animation:tabIn .22s cubic-bezier(.2,0,0,1);">
+          <!-- GREETING -->
+          <div style="margin:16px 2px 28px;">
+            <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--muted);">{{ greeting }}</div>
+            <div style="font-size:32px;font-weight:700;letter-spacing:-.03em;color:var(--text);line-height:1.08;margin-top:6px;">Ready when<br>you are.</div>
+            <div style="width:36px;height:3px;border-radius:2px;background:var(--primary);margin-top:14px;box-shadow:0 0 14px var(--primary);opacity:.8;"></div>
+          </div>
+
+          <!-- FEATURED HEADER -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:13px;">
+            <span style="flex:1;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);opacity:.7;">{{ featuredLabel }}</span>
+            <sc-if value="{{ editingPinned }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ doneEditPinned }}" style="font-size:13px;font-weight:700;color:var(--primary);background:none;border:none;cursor:pointer;padding:5px 2px;">Done</button>
+            </sc-if>
+            <sc-if value="{{ notEditingPinned }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ startEditPinned }}" style="width:34px;height:34px;border-radius:11px;background:var(--s2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;" style-hover="background:var(--s3);">
+                <span class="ms" style="font-size:19px;color:var(--muted);">tune</span>
+              </button>
+            </sc-if>
+          </div>
+
+          <!-- FEATURED CARDS -->
+          <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:8px;">
+            <sc-for list="{{ featured }}" as="item" hint-placeholder-count="3">
+              <div style="position:relative;">
+                <button data-id="{{ item.id }}" onClick="{{ openTool }}" style="{{ item.cardStyle }}" style-active="transform:scale3d(.974,.974,1) translateY(2px);">
+                  <span style="{{ item.iconWrap }}"><span class="ms" style="{{ item.iconStyle }}">{{ item.icon }}</span></span>
+                  <span style="flex:1;min-width:0;text-align:left;">
+                    <span style="display:block;font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.015em;">{{ item.name }}</span>
+                    <span style="display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35;">{{ item.desc }}</span>
+                  </span>
+                  <span style="{{ item.arrowStyle }}"><span class="ms" style="font-size:21px;">arrow_forward</span></span>
+                </button>
+                <sc-if value="{{ editingPinned }}" hint-placeholder-val="{{ false }}">
+                  <button data-id="{{ item.id }}" onClick="{{ removePin }}" style="position:absolute;top:-7px;left:-7px;width:26px;height:26px;border-radius:50%;background:var(--danger);border:2px solid var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.5);z-index:3;padding:0;">
+                    <span class="ms" style="font-size:15px;color:#fff;font-variation-settings:'FILL' 1;">remove</span>
+                  </button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- ADD TOOLS (edit mode) -->
+          <sc-if value="{{ editingPinned }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:14px 0 6px;">
+              <div style="font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;opacity:.6;">Add to pinned</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{ addableTools }}" as="at" hint-placeholder-count="4">
+                  <button data-id="{{ at.id }}" onClick="{{ addPin }}" style="{{ at.chipStyle }}" style-active="transform:scale(.95);">
+                    <span class="ms" style="font-size:17px;color:{{ at.color }};font-variation-settings:'FILL' 1;">{{ at.icon }}</span>
+                    <span style="font-size:12.5px;font-weight:600;color:var(--text);">{{ at.name }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- SECTION DIVIDER -->
+          <div style="display:flex;align-items:center;gap:12px;margin:24px 0 16px;">
+            <div style="height:1px;flex:1;background:linear-gradient(to right,var(--border),transparent);"></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.45;">More</span>
+            <div style="height:1px;flex:1;background:linear-gradient(to left,var(--border),transparent);"></div>
+          </div>
+
+          <!-- GRID TOOLS -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+            <sc-for list="{{ gridTools }}" as="item" hint-placeholder-count="6">
+              <button data-id="{{ item.id }}" onClick="{{ openTool }}" style="{{ item.gridStyle }}" style-active="transform:scale3d(.972,.972,1) translateY(2px);">
+                <span style="{{ item.dotPip }}"></span>
+                <span style="{{ item.gridIconWrap }}"><span class="ms" style="{{ item.gridIconStyle }}">{{ item.icon }}</span></span>
+                <span style="display:block;font-size:13.5px;font-weight:700;color:var(--text);letter-spacing:-.01em;margin-top:11px;">{{ item.name }}</span>
+                <span style="display:block;font-size:11px;color:var(--muted);margin-top:3px;line-height:1.35;">{{ item.desc }}</span>
+              </button>
+            </sc-for>
+          </div>
+
+          <!-- SAFETY NOTE -->
+          <div style="margin-top:20px;margin-bottom:8px;display:flex;gap:12px;padding:16px;background:rgba(76,141,255,.06);border-radius:18px;box-shadow:0 0 0 1px rgba(76,141,255,.1);">
+            <span class="ms" style="font-size:20px;color:var(--primary);flex:none;margin-top:1px;opacity:.8;">verified_user</span>
+            <span style="font-size:12px;line-height:1.6;color:var(--muted);">Every result shows its working so you can verify it. Does not replace the order or local protocol. <strong style="color:var(--text);font-weight:700;">The nurse is the final safety check.</strong></span>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- TOOLS TAB -->
+      <sc-if value="{{ isTools }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:tabIn .22s cubic-bezier(.2,0,0,1);">
+          <div style="display:flex;align-items:center;gap:11px;background:var(--s2);border:1px solid var(--border);border-radius:16px;padding:0 14px;height:54px;margin:12px 0 18px;">
+            <span class="ms" style="font-size:21px;color:var(--muted);">search</span>
+            <input name="query" value="{{ query }}" onChange="{{ onInput }}" autocomplete="off" placeholder="Search calculators" style="flex:1;background:transparent;border:none;box-shadow:none!important;outline:none;font-family:Roboto,sans-serif;font-size:15px;color:var(--text);height:100%;" />
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ toolsList }}" as="item" hint-placeholder-count="7">
+              <button data-id="{{ item.id }}" onClick="{{ openTool }}" style="{{ item.rowStyle }}" style-active="transform:scale3d(.99,.99,1);">
+                <span style="{{ item.rowIconWrap }}"><span class="ms" style="{{ item.rowIconStyle }}">{{ item.icon }}</span></span>
+                <span style="flex:1;min-width:0;text-align:left;">
+                  <span style="display:block;font-size:15.5px;font-weight:700;color:var(--text);">{{ item.name }}</span>
+                  <span style="display:block;font-size:12px;color:var(--muted);margin-top:1px;">{{ item.desc }}</span>
+                </span>
+                <sc-if value="{{ item.danger }}" hint-placeholder-val="{{ false }}">
+                  <span style="flex:none;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--danger);background:var(--danger-soft);padding:4px 9px;border-radius:8px;">HIGH-RISK</span>
+                </sc-if>
+                <span class="ms" style="font-size:20px;color:var(--muted);flex:none;">chevron_right</span>
+              </button>
+            </sc-for>
+            <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center;padding:40px 0;font-size:14px;color:var(--muted);">No match for "{{ query }}"</div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- REFERENCE TAB -->
+      <sc-if value="{{ isReference }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:tabIn .22s cubic-bezier(.2,0,0,1);">
+
+          <!-- HOW TO USE -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 2px 13px;">How to use</div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:16px 17px;margin-bottom:14px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <span style="flex:none;width:24px;height:24px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary);">1</span>
+                <span style="font-size:13px;line-height:1.55;color:var(--text);">Enter values exactly as written on the order — unit for unit. Do not convert in your head before entering.</span>
+              </div>
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <span style="flex:none;width:24px;height:24px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary);">2</span>
+                <span style="font-size:13px;line-height:1.55;color:var(--text);">Read the result <strong>and the working line below it</strong>. If the working doesn't match how you'd do it by hand, stop and recheck.</span>
+              </div>
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <span style="flex:none;width:24px;height:24px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary);">3</span>
+                <span style="font-size:13px;line-height:1.55;color:var(--text);">Cross-check the result against the prescriber's order. If they differ, the order is the authority — query the order, don't adjust the dose.</span>
+              </div>
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <span style="flex:none;width:24px;height:24px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary);">4</span>
+                <span style="font-size:13px;line-height:1.55;color:var(--text);">For high-risk calculations (titration, chemotherapy, paediatric), have a second qualified clinician independently verify the result before giving.</span>
+              </div>
+              <div style="display:flex;gap:12px;align-items:flex-start;">
+                <span style="flex:none;width:24px;height:24px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary);">5</span>
+                <span style="font-size:13px;line-height:1.55;color:var(--text);">If the result or any warning feels wrong — trust that instinct. Call pharmacy or the prescriber before proceeding.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- WHEN NOT TO USE -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--danger);margin:20px 2px 13px;">When NOT to use this app</div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:16px 17px;margin-bottom:14px;">
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--danger);flex:none;margin-top:1px;">block</span><span style="font-size:13px;color:var(--text);line-height:1.5;">You are unfamiliar with the drug, route, or indication — look it up first.</span></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--danger);flex:none;margin-top:1px;">block</span><span style="font-size:13px;color:var(--text);line-height:1.5;">The patient is deteriorating — escalate immediately rather than calculating.</span></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--danger);flex:none;margin-top:1px;">block</span><span style="font-size:13px;color:var(--text);line-height:1.5;">Your policy mandates a pharmacist check — this app does not replace that requirement.</span></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--danger);flex:none;margin-top:1px;">block</span><span style="font-size:13px;color:var(--text);line-height:1.5;">Complex titration with multi-step adjustments — use the pump's validated drug library instead.</span></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--danger);flex:none;margin-top:1px;">block</span><span style="font-size:13px;color:var(--text);line-height:1.5;">The order is unclear or ambiguous — clarify with the prescriber before calculating.</span></div>
+            </div>
+          </div>
+
+          <!-- LEGAL & ETHICAL -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:20px 2px 13px;">Legal &amp; ethical framework</div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:16px 17px;margin-bottom:14px;">
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--muted);flex:none;margin-top:1px;">gavel</span><span style="font-size:13px;color:var(--text);line-height:1.5;"><strong>Not a certified medical device.</strong> This app is a mathematical aid and has not been validated, registered, or approved as a medical device under CE, FDA, TGA, or any other regulatory framework.</span></div>
+              <div style="height:1px;background:var(--border);"></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--muted);flex:none;margin-top:1px;">policy</span><span style="font-size:13px;color:var(--text);line-height:1.5;"><strong>The prescriber's order is the clinical authority.</strong> A calculated result that differs from the order means the order should be queried — not that the order is wrong.</span></div>
+              <div style="height:1px;background:var(--border);"></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--muted);flex:none;margin-top:1px;">account_balance</span><span style="font-size:13px;color:var(--text);line-height:1.5;"><strong>Professional accountability stays with the clinician.</strong> Using this app does not transfer or reduce your professional, legal, or ethical responsibility for the care you give.</span></div>
+              <div style="height:1px;background:var(--border);"></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--muted);flex:none;margin-top:1px;">local_hospital</span><span style="font-size:13px;color:var(--text);line-height:1.5;"><strong>Local protocol takes precedence.</strong> Where your institution's protocol differs from a result shown here, follow your protocol and raise the discrepancy through the appropriate channel.</span></div>
+              <div style="height:1px;background:var(--border);"></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--muted);flex:none;margin-top:1px;">child_care</span><span style="font-size:13px;color:var(--text);line-height:1.5;"><strong>Paediatric use requires additional caution.</strong> Weight-based calculations for neonates and children carry higher risk. Always apply age-appropriate dosing references and a pharmacist or senior clinician check.</span></div>
+              <div style="height:1px;background:var(--border);"></div>
+              <div style="display:flex;gap:10px;align-items:flex-start;"><span class="ms" style="font-size:17px;color:var(--muted);flex:none;margin-top:1px;">verified_user</span><span style="font-size:13px;color:var(--text);line-height:1.5;"><strong>Transparency by design.</strong> Every result shows its full working so that errors in inputs can be caught before the result is acted on. The working line is not decoration — read it.</span></div>
+            </div>
+          </div>
+
+          <!-- OXYGEN / SPO2 -->
+          <div style="display:flex;gap:10px;padding:13px 15px;background:var(--primary-soft);border:1px solid var(--primary-border);border-radius:14px;margin:0 0 14px;">
+            <span class="ms" style="font-size:19px;color:var(--primary);flex:none;">info</span>
+            <span style="font-size:12.5px;color:var(--text);line-height:1.5;">SpO₂ targets and cannula gauge tool are available from the Home and Tools tabs — tap any tool card to open it.</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- SETTINGS TAB -->
+      <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:tabIn .22s cubic-bezier(.2,0,0,1);">
+          <div style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 2px 12px;">Appearance</div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:6px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:13px;padding:12px 13px;">
+              <span style="width:42px;height:42px;border-radius:13px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;flex:none;"><span class="ms" style="font-size:22px;color:var(--primary);">{{ themeIcon }}</span></span>
+              <span style="flex:1;"><span style="display:block;font-size:14.5px;font-weight:700;color:var(--text);">Dark theme</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:1px;">{{ themeStateLabel }}</span></span>
+              <button onClick="{{ toggleTheme }}" style="{{ switchTrack }}"><span style="{{ switchThumb }}"></span></button>
+            </div>
+            <div style="height:1px;background:var(--border);margin:2px 13px;"></div>
+            <div style="padding:14px 13px 15px;">
+              <div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:12px;">Accent</div>
+              <div style="display:flex;gap:11px;">
+                <sc-for list="{{ accentSwatches }}" as="sw" hint-placeholder-count="4">
+                  <button data-accent="{{ sw.id }}" onClick="{{ setAccent }}" style="{{ sw.style }}"><sc-if value="{{ sw.active }}" hint-placeholder-val="{{ false }}"><span class="ms" style="font-size:20px;color:#fff;font-variation-settings:'FILL' 1;">check</span></sc-if></button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 2px 12px;">Install</div>
+          <div style="background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:16px 17px;margin-bottom:14px;display:flex;gap:13px;align-items:flex-start;">
+            <span style="width:42px;height:42px;border-radius:13px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;flex:none;"><span class="ms" style="font-size:22px;color:var(--primary);">install_mobile</span></span>
+            <div style="flex:1;"><div style="font-size:14.5px;font-weight:700;color:var(--text);">Add to home screen</div><div style="font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5;">Installs as an app and updates automatically — no app store, works offline at the bedside.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;padding:15px 16px;background:var(--s1);border:1px solid var(--border);border-radius:18px;">
+            <span class="ms" style="font-size:20px;color:var(--primary);flex:none;">verified_user</span>
+            <span style="font-size:12px;line-height:1.6;color:var(--muted);">Bedside shows its working for every result so it can be verified at a glance. It does not replace independent checking, the prescribed order, or local protocol. <strong style="color:var(--text);font-weight:700;">The nurse is the final safety check.</strong></span>
+          </div>
+          <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:22px;">Bedside · v1.0 · 9 calculators</div>
+        </div>
+      </sc-if>
+
+    </div><!-- /scroll -->
+
+  </div><!-- /main container -->
+
+  <!-- ============ TOOL OVERLAY ============ -->
+    <sc-if value="{{ toolOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ overlayWrapStyle }}">
+
+        <!-- CENTERED HERO HEADER -->
+        <div style="{{ overlayHeaderStyle }}">
+          <div style="height:30px;"></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:6px 14px 8px;">
+            <button onClick="{{ closeTool }}" style="flex:none;width:42px;height:42px;border-radius:50%;border:none;background:rgba(255,255,255,.09);backdrop-filter:blur(8px);cursor:pointer;display:flex;align-items:center;justify-content:center;" style-hover="background:rgba(255,255,255,.15);" style-active="transform:scale(.9);">
+              <span class="ms" style="font-size:22px;color:var(--text);">arrow_back</span>
+            </button>
+            <div style="flex:1;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;padding:4px 20px 24px;text-align:center;">
+            <div style="{{ overlayIconBadge }}">
+              <span class="ms" style="{{ overlayIconStyle }}">{{ overlayIcon }}</span>
+            </div>
+            <div style="font-size:23px;font-weight:700;letter-spacing:-.02em;color:var(--text);margin-top:14px;animation:haloFade .35s ease;">{{ overlayTitle }}</div>
+          </div>
+        </div>
+
+        <!-- DROPDOWN SCRIM -->
+        <sc-if value="{{ hasOpenDropdown }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeDropdown }}" style="position:absolute;inset:0;z-index:40;"></div>
+        </sc-if>
+
+        <!-- SCROLL CONTENT -->
+        <div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 16px 32px;-webkit-overflow-scrolling:touch;position:relative;z-index:50;">
+
+          <!-- OXYGEN ASSESSMENT -->
+          <sc-if value="{{ toolIsOxygen }}" hint-placeholder-val="{{ false }}">
+            <!-- assessment card — only when reading entered -->
+            <sc-if value="{{ spo2Result }}" hint-placeholder-val="{{ false }}">
+              <div style="background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:20px 18px;margin-bottom:20px;">
+                <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);margin-bottom:12px;">Assessment</div>
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <span class="ms" style="font-size:36px;font-variation-settings:'FILL' 1;color:{{ spo2Result.color }};flex:none;">{{ spo2Result.icon }}</span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:clamp(20px,6vw,26px);color:{{ spo2Result.color }};line-height:1.15;">{{ spo2Result.status }}</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px;">Target: {{ spo2Result.target }} · {{ spo2Result.label }}</div>
+                  </div>
+                </div>
+                <div style="margin-top:14px;padding:12px 14px;background:var(--s2);border-radius:12px;font-size:13px;color:var(--text);line-height:1.6;">{{ spo2Result.action }}</div>
+                <div style="margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.55;padding:0 2px;">{{ spo2Result.note }}</div>
+              </div>
+            </sc-if>
+            <!-- reference grid -->
+            <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Target ranges</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+              <div style="background:var(--s2);border-radius:14px;padding:14px;">
+                <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--muted);">General</div>
+                <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:26px;color:var(--text);margin-top:7px;line-height:1;">92–96%</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35;">most adults · BTS/TSANZ</div>
+              </div>
+              <div style="background:var(--s2);border-radius:14px;padding:14px;">
+                <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--warn);">COPD / at-risk</div>
+                <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:26px;color:var(--text);margin-top:7px;line-height:1;">88–92%</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35;">hypercapnia risk · titrate</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+              <div style="background:var(--s2);border-radius:14px;padding:14px;">
+                <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--danger);">Acutely ill</div>
+                <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:26px;color:var(--text);margin-top:7px;line-height:1;">94–98%</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35;">sepsis, MI, stroke</div>
+              </div>
+              <div style="background:var(--s2);border-radius:14px;padding:14px;">
+                <div style="font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--muted);">Paeds / neonate</div>
+                <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:26px;color:var(--text);margin-top:7px;line-height:1;">91–95%</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35;">confirm per protocol</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;padding:13px 15px;background:var(--warn-soft);border-radius:14px;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:8px;">
+              <span class="ms" style="font-size:18px;color:var(--warn);flex:none;margin-top:1px;">warning</span>
+              <span>Titrate to the lowest flow that achieves the target. <strong>Hyperoxia is harmful.</strong> Confirm unclear orders with the prescriber.</span>
+            </div>
+          </sc-if>
+
+          <!-- CANNULA OVERLAY -->
+          <sc-if value="{{ toolIsCannula }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:10px;padding:12px 14px;background:var(--primary-soft);border:1px solid var(--primary-border);border-radius:14px;margin-bottom:14px;">
+              <span class="ms" style="font-size:18px;color:var(--primary);flex:none;">info</span>
+              <span style="font-size:12px;color:var(--text);line-height:1.5;">Physical-ceiling sanity check — not a substitute for the calculated rate. Verify gauge on packaging; ISO colour coding is not mandated everywhere.</span>
+            </div>
+          </sc-if>
+
+          <!-- HIGH-RISK BANNER -->
+          <sc-if value="{{ toolIsTitration }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:11px;padding:14px 16px;background:var(--danger-soft);border:1px solid var(--danger);border-radius:18px;margin-bottom:16px;">
+              <span class="ms" style="font-size:22px;color:var(--danger);flex:none;">warning</span>
+              <span style="font-size:12.5px;color:var(--text);line-height:1.5;"><strong style="color:var(--danger);font-weight:700;">High-risk.</strong> Verify independently and against your pump's drug library before infusing.</span>
+            </div>
+          </sc-if>
+
+          <!-- INPUTS — smart field cards -->
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+            <sc-for list="{{ curFields }}" as="fld" hint-placeholder-count="3">
+              <div style="{{ fld.cardWrap }}">
+                <!-- label row -->
+                <div style="display:flex;align-items:center;padding:10px 16px 0;min-height:28px;">
+                  <span style="flex:1;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);">{{ fld.label }}</span>
+                  <sc-if value="{{ fld.validCheck }}" hint-placeholder-val="{{ false }}">
+                    <span class="ms" style="font-size:18px;color:var(--tc);font-variation-settings:'FILL' 1;animation:iconPop .25s cubic-bezier(.34,1.56,.64,1);">check_circle</span>
+                  </sc-if>
+                </div>
+                <!-- input row -->
+                <sc-if value="{{ fld.isInput }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;align-items:baseline;padding:2px 16px 13px;gap:9px;">
+                    <input name="{{ fld.key }}" value="{{ fld.value }}" onChange="{{ onInput }}" inputmode="{{ fld.inputMode }}" autocomplete="off" placeholder="0" style="{{ inputStyle }}" />
+                    <sc-if value="{{ fld.hasUnit }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-family:'Roboto Mono',monospace;font-size:15px;font-weight:500;color:var(--muted);flex:none;white-space:nowrap;padding-bottom:2px;">{{ fld.unitRaw }}</span>
+                    </sc-if>
+                  </div>
+                </sc-if>
+                <!-- select row -->
+                <sc-if value="{{ fld.isSelect }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:0 0 0px;">
+                    <button data-key="{{ fld.key }}" onClick="{{ toggleDropdown }}" style="{{ fld.dropTrigger }}">
+                      <span style="flex:1;font-size:19px;font-weight:600;color:var(--text);text-align:left;font-family:'Roboto Mono',monospace;letter-spacing:-.02em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ fld.selectedLabel }}</span>
+                      <span class="ms" style="{{ fld.chevronStyle }}">expand_more</span>
+                    </button>
+                    <sc-if value="{{ fld.dropOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="{{ fld.dropPanel }}">
+                        <sc-for list="{{ fld.options }}" as="opt" hint-placeholder-count="4">
+                          <button data-key="{{ fld.key }}" data-value="{{ opt.value }}" onClick="{{ selectOption }}" style="{{ opt.optStyle }}">
+                            <span style="{{ opt.labelStyle }}">{{ opt.label }}</span>
+                            <sc-if value="{{ opt.selected }}" hint-placeholder-val="{{ false }}"><span class="ms" style="font-size:18px;color:var(--tc);font-variation-settings:'FILL' 1;flex:none;">check</span></sc-if>
+                          </button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- TOOL GUIDELINE HINT -->
+          <sc-if value="{{ toolHasHint }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:10px;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:16px;margin-bottom:14px;">
+              <span class="ms" style="font-size:17px;color:var(--tc);flex:none;margin-top:1px;opacity:.85;">info</span>
+              <span style="font-size:12px;color:var(--muted);line-height:1.6;text-wrap:pretty;">{{ toolHint }}</span>
+            </div>
+          </sc-if>
+
+          <!-- RESULT CARD -->
+          <sc-if value="{{ showResultCard }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ resultCardStyle }}">
+            <sc-if value="{{ curErr }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:11px;align-items:flex-start;padding:16px;background:var(--danger-soft);color:var(--danger);border-radius:16px;font-size:13px;font-weight:500;line-height:1.45;">
+                <span class="ms" style="font-size:20px;flex:none;margin-top:1px;">error</span><span>{{ curErrMsg }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ curOk }}" hint-placeholder-val="{{ false }}">
+              <div style="animation:numIn .35s cubic-bezier(.2,0,0,1);">
+                <sc-for list="{{ curBlocks }}" as="blk" hint-placeholder-count="1">
+                  <div style="{{ blk.wrapStyle }}">
+                    <div style="{{ blk.labelStyle }}">{{ blk.label }}</div>
+                    <div style="display:flex;align-items:baseline;gap:10px;margin-top:8px;flex-wrap:wrap;">
+                      <span style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:{{ blk.size }};line-height:1;color:var(--text);word-break:break-all;">{{ blk.val }}</span>
+                      <span style="font-size:20px;color:var(--muted);font-weight:500;font-family:Roboto,sans-serif;">{{ blk.unit }}</span>
+                    </div>
+                    <sc-if value="{{ blk.hasSub }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Roboto Mono',monospace;font-size:14px;color:var(--muted);margin-top:9px;opacity:.8;">{{ blk.sub }}</div></sc-if>
+                    <sc-if value="{{ blk.hasWorking }}" hint-placeholder-val="{{ false }}"><div style="{{ workingStyle }}">{{ blk.working }}</div></sc-if>
+                  </div>
+                </sc-for>
+                <!-- DRIP SPOT CHECK -->
+                <sc-if value="{{ hasSpotChecks }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:16px;">
+                    <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;">Bedside spot-check</div>
+                    <div style="display:flex;gap:8px;">
+                      <sc-for list="{{ spotChecks }}" as="spotRow" hint-placeholder-count="3">
+                        <div style="{{ spotRow.chipStyle }}">
+                          <span style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:22px;color:var(--text);">{{ spotRow.count }}</span>
+                          <span style="font-size:10.5px;font-weight:700;color:var(--tc);">{{ spotRow.label }}</span>
+                          <span style="font-size:10px;color:var(--muted);text-align:center;line-height:1.3;">{{ spotRow.tip }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ curStage }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:14px;display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--s2);border-radius:13px;">
+                    <span class="ms" style="font-size:18px;color:var(--primary);flex:none;">science</span>
+                    <span style="font-size:13px;font-weight:600;color:{{ curStageColor }};">{{ curStageLabel }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ curWarn }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:16px;display:flex;gap:10px;align-items:flex-start;padding:14px;background:var(--warn-soft);color:var(--warn);border-radius:14px;font-size:12.5px;font-weight:600;line-height:1.45;">
+                    <span class="ms" style="font-size:19px;flex:none;">warning</span><span>{{ curWarnMsg }}</span>
+                  </div>
+                </sc-if>
+
+                <!-- TITRATION DOUBLE-CHECK -->
+                <sc-if value="{{ toolIsTitration }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:22px;padding-top:22px;border-top:1px dashed var(--border);">
+                    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">Independent double-check</div>
+                    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5;">Re-enter the pump rate to confirm before infusing.</div>
+                    <input name="titCheck" value="{{ titCheckVal }}" onChange="{{ onInput }}" inputmode="decimal" autocomplete="off" placeholder="mL/hr" style="{{ inputStyle }}" />
+                    <sc-if value="{{ titCheckEmpty }}" hint-placeholder-val="{{ false }}"><div style="margin-top:11px;font-size:12.5px;color:var(--muted);">Awaiting confirmation.</div></sc-if>
+                    <sc-if value="{{ titCheckMatch }}" hint-placeholder-val="{{ false }}"><div style="margin-top:11px;display:flex;gap:9px;align-items:center;padding:13px;background:var(--primary-soft);color:var(--primary);border-radius:13px;font-size:13px;font-weight:700;"><span class="ms" style="font-size:19px;">check_circle</span><span>Confirmed — matches the calculated rate.</span></div></sc-if>
+                    <sc-if value="{{ titCheckMismatch }}" hint-placeholder-val="{{ false }}"><div style="margin-top:11px;display:flex;gap:9px;align-items:center;padding:13px;background:var(--danger-soft);color:var(--danger);border-radius:13px;font-size:13px;font-weight:700;"><span class="ms" style="font-size:19px;">cancel</span><span>Does not match — recheck before infusing.</span></div></sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+          </sc-if>
+
+          <!-- CANNULA RESULT PANEL -->
+          <sc-if value="{{ toolIsCannula }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ cannulaResult }}" hint-placeholder-val="{{ false }}">
+              <div style="background:var(--s1);border:1px solid var(--border);border-radius:22px;padding:20px;margin-top:2px;">
+                <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted);">Required flow</div>
+                <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:clamp(36px,11vw,48px);color:var(--text);line-height:1.05;margin-top:6px;word-break:break-word;">{{ cannulaResult.minVal }} <span style="font-size:17px;color:var(--muted);font-weight:500;">mL/min</span></div>
+                <sc-if value="{{ cannulaResult.err }}" hint-placeholder-val="{{ false }}"><div style="margin-top:13px;display:flex;gap:9px;align-items:flex-start;padding:12px 13px;background:var(--danger-soft);color:var(--danger);border-radius:12px;font-size:12.5px;font-weight:500;line-height:1.45;"><span class="ms" style="font-size:17px;flex:none;">error</span><span>{{ cannulaResult.err }}</span></div></sc-if>
+                <sc-if value="{{ cannulaResult.pick }}" hint-placeholder-val="{{ false }}"><div style="margin-top:13px;display:flex;gap:9px;align-items:flex-start;padding:12px 13px;background:var(--primary-soft);color:var(--primary);border-radius:12px;font-size:12.5px;font-weight:700;line-height:1.45;"><span class="ms" style="font-size:17px;flex:none;">arrow_forward</span><span>{{ cannulaResult.pick }}</span></div></sc-if>
+                <sc-if value="{{ cannulaResult.warn }}" hint-placeholder-val="{{ false }}"><div style="margin-top:13px;display:flex;gap:9px;align-items:flex-start;padding:12px 13px;background:var(--warn-soft);color:var(--warn);border-radius:12px;font-size:12.5px;font-weight:700;line-height:1.45;"><span class="ms" style="font-size:17px;flex:none;">warning</span><span>{{ cannulaResult.warn }}</span></div></sc-if>
+              </div>
+              <div style="background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:14px 8px 10px;margin-top:12px;">
+                <div style="display:flex;gap:8px;padding:0 12px 8px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--muted);">
+                  <span style="width:14px;flex:none;"></span><span style="width:34px;flex:none;">G</span><span style="flex:1;">Colour</span><span style="width:64px;flex:none;text-align:right;">mL/min</span>
+                </div>
+                <sc-for list="{{ cannulaResult.rows }}" as="row" hint-placeholder-count="6">
+                  <div style="{{ row.rowStyle }}">
+                    <span style="{{ row.dotStyle }}"></span>
+                    <span style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:13.5px;color:var(--text);width:34px;flex:none;">{{ row.g }}</span>
+                    <span style="flex:1;min-width:0;"><span style="display:block;font-size:13px;color:var(--text);">{{ row.color }}</span><span style="display:block;font-size:11px;color:var(--muted);line-height:1.3;margin-top:1px;">{{ row.use }}</span></span>
+                    <span style="font-family:'Roboto Mono',monospace;font-size:12.5px;color:var(--muted);width:64px;flex:none;text-align:right;">{{ row.flow }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </sc-if>
+
+        </div><!-- /scroll -->
+
+        <!-- OXYGEN STATUS FOOTER -->
+        <sc-if value="{{ showOxygenFooter }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:none;display:flex;align-items:center;gap:14px;padding:14px 20px 18px;background:var(--s2);border-top:1px solid var(--border);">
+            <span class="ms" style="font-size:28px;font-variation-settings:'FILL' 1;color:{{ oxygenFooterColor }};flex:none;">{{ oxygenFooterIcon }}</span>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);">{{ oxygenFooterTarget }}</div>
+              <div style="font-size:18px;font-weight:700;color:{{ oxygenFooterColor }};margin-top:2px;line-height:1.1;">{{ oxygenFooterStatus }}</div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showOxygenEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:none;display:flex;align-items:center;gap:10px;padding:13px 20px 16px;background:var(--s2);border-top:1px solid var(--border);">
+            <span class="ms" style="font-size:20px;color:var(--muted);">favorite</span>
+            <span style="font-size:13px;color:var(--muted);font-family:Roboto,sans-serif;">Enter SpO₂ reading to assess</span>
+          </div>
+        </sc-if>
+
+        <!-- STICKY RESULT FOOTER -->
+        <sc-if value="{{ showStickyFooter }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ stickyFooterStyle }}">
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--on-tc);opacity:.65;">{{ resultBarLabel }}</div>
+              <div style="font-family:'Roboto Mono',monospace;font-weight:700;font-size:clamp(28px,9vw,38px);color:var(--on-tc);line-height:1.05;margin-top:2px;word-break:break-word;">{{ resultBarVal }} <span style="font-size:16px;font-weight:500;opacity:.8;">{{ resultBarUnit }}</span></div>
+            </div>
+            <span class="ms" style="font-size:32px;color:var(--on-tc);opacity:.7;flex:none;font-variation-settings:'FILL' 1;">check_circle</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showFooterEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ stickyFooterEmptyStyle }}">
+            <span class="ms" style="font-size:20px;color:var(--muted);">calculate</span>
+            <span style="font-size:13px;color:var(--muted);font-family:Roboto,sans-serif;">Enter values above to calculate</span>
+          </div>
+        </sc-if>
+
+      </div><!-- /overlay -->
+    </sc-if>
+
+  <!-- floating result bar removed — replaced by sticky footer inside overlay -->
+
+  <!-- QUICK CALC FAB -->
+  <sc-if value="{{ showFab }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;right:16px;bottom:88px;z-index:55;display:flex;flex-direction:column;align-items:flex-end;gap:11px;">
+      <sc-if value="{{ fabOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="width:264px;background:var(--s1);border-radius:24px;overflow:hidden;box-shadow:0 0 0 1px var(--border),0 6px 0 rgba(0,0,0,.55),0 20px 60px rgba(0,0,0,.65);animation:sheetUp .28s cubic-bezier(.2,0,0,1);">
+          <div style="display:flex;align-items:center;gap:9px;padding:13px 16px 11px;border-bottom:1px solid var(--border);">
+            <span class="ms" style="font-size:17px;color:var(--primary);">calculate</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);">Quick calc</span>
+          </div>
+          <sc-for list="{{ fabActions }}" as="act" hint-placeholder-count="3">
+            <button data-id="{{ act.id }}" onClick="{{ openTool }}" style="width:100%;display:flex;align-items:center;gap:13px;padding:13px 16px;background:transparent;border:none;border-bottom:1px solid var(--border);cursor:pointer;text-align:left;font-family:Roboto,sans-serif;animation:fabItemIn .22s cubic-bezier(.34,1.56,.64,1) both;{{ act.fabDelay }}" style-active="background:var(--s2);">
+              <span style="{{ act.iconWrap }}"><span class="ms" style="font-size:21px;color:{{ act.color }};font-variation-settings:'FILL' 1;">{{ act.icon }}</span></span>
+              <span style="flex:1;min-width:0;">
+                <span style="display:block;font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em;">{{ act.name }}</span>
+                <span style="display:block;font-size:11px;color:var(--muted);margin-top:1px;">{{ act.desc }}</span>
+              </span>
+              <span class="ms" style="font-size:17px;color:var(--muted);">arrow_forward</span>
+            </button>
+          </sc-for>
+          <div style="padding:11px 14px;">
+            <button data-tab="tools" onClick="{{ setTabClose }}" style="width:100%;height:38px;border-radius:11px;border:none;background:var(--s2);cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted);font-family:Roboto,sans-serif;" style-hover="color:var(--text);">See all calculators →</button>
+          </div>
+        </div>
+      </sc-if>
+      <button onClick="{{ toggleFab }}" style="{{ fabBtnStyle }}" style-active="transform:scale3d(.91,.91,1);">
+        <span class="ms" style="font-size:26px;color:var(--on-primary);font-variation-settings:'FILL' 1;transition:transform 300ms cubic-bezier(.34,1.56,.64,1);transform:{{ fabIconRotate }};">{{ fabIcon }}</span>
+      </button>
+    </div>
+  </sc-if>
+
+  <!-- FAB SCRIM -->
+  <sc-if value="{{ fabOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toggleFab }}" style="position:absolute;inset:0;z-index:50;background:rgba(0,0,0,0.5);backdrop-filter:blur(3px);animation:scrimIn .2s ease;"></div>
+  </sc-if>
+
+  <!-- PROFILE BOTTOM SHEET -->
+  <sc-if value="{{ profileOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeProfile }}" style="position:absolute;inset:0;z-index:60;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);animation:scrimIn .2s ease;"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;z-index:61;background:var(--s1);border-top:1px solid var(--border);border-radius:28px 28px 0 0;padding:10px 18px 28px;box-shadow:0 -16px 60px rgba(0,0,0,0.5);animation:sheetUp .32s cubic-bezier(.2,0,0,1);">
+      <div style="width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px;"></div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+        <span style="{{ iconBadgeLgStyle }}"><img src="uploads/bedside-icon.png" style="width:46px;height:46px;object-fit:contain;" alt="Bedside" /></span>
+        <div><div style="font-size:17px;font-weight:700;color:var(--text);">Bedside</div><div style="font-size:12.5px;color:var(--muted);margin-top:1px;">Clinical calculators · v1.0</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <button data-tab="settings" onClick="{{ setTabClose }}" style="display:flex;align-items:center;gap:13px;padding:14px 8px;background:transparent;border:none;cursor:pointer;font-size:15px;font-weight:500;color:var(--text);text-align:left;border-radius:13px;" style-hover="background:var(--s2);"><span class="ms" style="font-size:22px;color:var(--muted);">settings</span><span style="flex:1;">Settings &amp; appearance</span><span class="ms" style="font-size:20px;color:var(--muted);">chevron_right</span></button>
+        <button data-tab="reference" onClick="{{ setTabClose }}" style="display:flex;align-items:center;gap:13px;padding:14px 8px;background:transparent;border:none;cursor:pointer;font-size:15px;font-weight:500;color:var(--text);text-align:left;border-radius:13px;" style-hover="background:var(--s2);"><span class="ms" style="font-size:22px;color:var(--muted);">menu_book</span><span style="flex:1;">Clinical reference</span><span class="ms" style="font-size:20px;color:var(--muted);">chevron_right</span></button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- BOTTOM NAV -->
+  <nav style="flex:none;position:relative;z-index:45;display:flex;background:var(--nav-bg);border-top:1px solid var(--border);padding:6px 0 18px;">
+    <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+      <button data-tab="{{ nav.id }}" onClick="{{ setTab }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:transparent;border:none;cursor:pointer;padding:6px 0;min-height:44px;">
+        <span class="ms" style="{{ nav.iconStyle }}">{{ nav.icon }}</span>
+        <span style="{{ nav.dotStyle }}"></span>
+      </button>
+    </sc-for>
+  </nav>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Slate&quot;,&quot;options&quot;:[&quot;Slate&quot;,&quot;Orange&quot;,&quot;Cyan&quot;,&quot;Violet&quot;,&quot;Green&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Light&quot;,&quot;options&quot;:[&quot;Dark&quot;,&quot;Light&quot;],&quot;tsType&quot;:&quot;string&quot;},&quot;showTitration&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {
+    tab: 'home', tool: null, closing: false,
+    theme: 'dark', accent: null,
+    fabOpen: false, profileOpen: false,
+    query: '', f: { dropFactor: '20', convType: 'kg_lb' }, titCheck: '',
+    pinnedTools: null, recentTools: [], editingPinned: false,
+    openDropdown: null
+  };
+
+  componentDidMount() {
+    const dt = this.props.defaultTheme;
+    if (dt === 'Light') this.setState({ theme: 'light' });
+    else if (dt === 'Dark') this.setState({ theme: 'dark' });
+    try {
+      const pins = JSON.parse(localStorage.getItem('bs_pins'));
+      const recents = JSON.parse(localStorage.getItem('bs_recents'));
+      const s = {};
+      if (Array.isArray(pins) && pins.length) s.pinnedTools = pins;
+      if (Array.isArray(recents) && recents.length) s.recentTools = recents;
+      if (Object.keys(s).length) this.setState(s);
+    } catch(e) {}
+  }
+
+  componentDidUpdate(pp, ps) {
+    if (this.state.closing && !ps.closing) {
+      setTimeout(() => this.setState(s => s.closing ? { tool: null, closing: false } : null), 290);
+    }
+  }
+
+  set = (e) => {
+    const { name, value } = e.target;
+    if (name === 'titCheck') { this.setState({ titCheck: value }); return; }
+    if (name === 'query') { this.setState({ query: value }); return; }
+    this.setState(s => ({ f: { ...s.f, [name]: value } }));
+  };
+  openTool = (e) => {
+    const id = e.currentTarget.dataset.id;
+    // no special redirects — all tools open as overlays
+    const recents = [id, ...(this.state.recentTools||[]).filter(r => r !== id)].slice(0, 6);
+    this.setState({ tool: id, fabOpen: false, closing: false, recentTools: recents, editingPinned: false });
+    try { localStorage.setItem('bs_recents', JSON.stringify(recents)); } catch(e) {}
+  };
+  closeTool = () => { this.setState({ closing: true }); };
+  setTab = (e) => { this.setState({ tab: e.currentTarget.dataset.tab, tool: null, closing: false, fabOpen: false }); };
+  setTabClose = (e) => { this.setState({ tab: e.currentTarget.dataset.tab, tool: null, closing: false, profileOpen: false }); };
+  toggleTheme = () => this.setState(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' }));
+  setAccent = (e) => this.setState({ accent: e.currentTarget.dataset.accent });
+  toggleFab = () => this.setState(s => ({ fabOpen: !s.fabOpen }));
+  openProfile = () => this.setState({ profileOpen: true });
+  closeProfile = () => this.setState({ profileOpen: false });
+  toggleDropdown = (e) => { const k = e.currentTarget.dataset.key; this.setState(s => ({ openDropdown: s.openDropdown === k ? null : k })); };
+  selectOption = (e) => { const { key, value } = e.currentTarget.dataset; this.setState(s => ({ f: { ...s.f, [key]: value }, openDropdown: null })); };
+  closeDropdown = () => this.setState({ openDropdown: null });
+
+  startEditPinned = () => {
+    if (!this.state.pinnedTools) {
+      const ids = this._featuredIds();
+      this.setState({ pinnedTools: ids, editingPinned: true });
+    } else {
+      this.setState({ editingPinned: true });
+    }
+  };
+  doneEditPinned = () => this.setState({ editingPinned: false });
+  removePin = (e) => {
+    const id = e.currentTarget.dataset.id;
+    const next = (this.state.pinnedTools || []).filter(p => p !== id);
+    this.setState({ pinnedTools: next.length ? next : null });
+    try { localStorage.setItem('bs_pins', JSON.stringify(next)); } catch(e) {}
+  };
+  addPin = (e) => {
+    const id = e.currentTarget.dataset.id;
+    const cur = this.state.pinnedTools || [];
+    if (cur.includes(id) || cur.length >= 3) return;
+    const next = [...cur, id];
+    this.setState({ pinnedTools: next });
+    try { localStorage.setItem('bs_pins', JSON.stringify(next)); } catch(e) {}
+  };
+  _featuredIds() {
+    const showTit = this.props.showTitration !== false;
+    const all = ['dose','drip','pump','weight','infusion','convert','oxygen','titration','cannula'];
+    const valid = all.filter(id => showTit || id !== 'titration');
+    const r = this.state.recentTools.filter(id => valid.includes(id)).slice(0, 3);
+    return r.length ? r : ['dose','drip', showTit ? 'titration' : 'pump'];
+  }
+
+  num(k) { const r = this.state.f[k]; if (r == null || String(r).trim() === '') return NaN; const n = Number(r); return Number.isFinite(n) ? n : NaN; }
+  g(n) { return Number.isFinite(n) ? Number(n.toFixed(3)).toString() : '?'; }
+  fmt(n, d) { return Number.isFinite(n) ? n.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d }) : '—'; }
+
+  THEMES = {
+    dose:      { color: '#2dd4bf', rgb: '45,212,191',   name: 'Drug dose',          icon: 'medication',      desc: 'mL to draw up from a vial' },
+    drip:      { color: '#60a5fa', rgb: '96,165,250',   name: 'IV drip rate',       icon: 'water_drop',      desc: 'drops/min on a gravity set' },
+    pump:      { color: '#c084fc', rgb: '192,132,252',  name: 'IV pump rate',       icon: 'speed',           desc: 'mL per hour' },
+    weight:    { color: '#fbbf24', rgb: '251,191,36',   name: 'Weight-based dose',  icon: 'monitor_weight',  desc: 'mg/kg total & per dose' },
+    infusion:  { color: '#34d399', rgb: '52,211,153',   name: 'Infusion time left', icon: 'schedule',        desc: 'hours & minutes remaining' },
+    convert:   { color: '#f472b6', rgb: '244,114,182',  name: 'Unit converter',     icon: 'sync_alt',        desc: 'kg, lb, g, mg, mcg, mL' },
+    oxygen:    { color: '#38bdf8', rgb: '56,189,248',   name: 'Oxygen / SpO₂',     icon: 'air',             desc: 'Target ranges reference' },
+    titration: { color: '#fb7185', rgb: '251,113,133',  name: 'Titration',          icon: 'ecg_heart',       desc: 'µg/kg/min · high-risk' },
+    cannula:       { color: '#fb923c', rgb: '251,146,60',   name: 'Cannula gauge',         icon: 'linear_scale',     desc: 'Flow-ceiling sanity check' },
+    creatinine:    { color: '#f472b6', rgb: '244,114,182', name: 'Creatinine clearance',  icon: 'science',          desc: 'Cockcroft–Gault · mL/min' },
+    reconstitution:{ color: '#c084fc', rgb: '192,132,252', name: 'Reconstitution',         icon: 'vaccines',         desc: 'Concentration from powder + diluent' },
+    bsa:           { color: '#34d399', rgb: '52,211,153',  name: 'Body surface area',      icon: 'accessibility_new', desc: 'Mosteller formula · m²' }
+  };
+
+  doseCalc() {
+    const a = this.num('doseToGive'), b = this.num('doseInVial'), c = this.num('diluent');
+    if ([a,b,c].some(isNaN)) return { err: 'Enter dose to give, vial strength, and diluent volume.' };
+    if (a<0||b<0||c<0) return { err: 'Values cannot be negative.' };
+    if (b===0) return { err: 'Vial strength cannot be zero.' };
+    const mL = (a/b)*c;
+    return { val: this.fmt(mL,2), unit: 'mL', working: '('+this.g(a)+'÷'+this.g(b)+')×'+this.g(c)+' = '+this.fmt(mL,2)+' mL', warn: a>b?'Dose to give exceeds the vial strength — confirm the order.':'' };
+  }
+  dripCalc() {
+    const v=this.num('volume'), h=this.num('time'), df=this.num('dropFactor');
+    if ([v,h,df].some(isNaN)) return { err: 'Enter volume, time, and drop factor.' };
+    if (v<0||h<0) return { err: 'Values cannot be negative.' };
+    if (h===0) return { err: 'Time cannot be zero.' };
+    const dpm=(v*df)/(h*60), r=Math.round(dpm), sec=dpm>0?60/dpm:0;
+    // spot-check counts
+    const in15s = Math.round(dpm/4), in30s = Math.round(dpm/2), in60s = r;
+    return {
+      val: String(r), unit: 'drops/min',
+      sub: dpm>0?'≈'+this.fmt(sec,1)+' s between drops':'',
+      working:'('+this.g(v)+'×'+this.g(df)+')÷('+this.g(h)+'×60) = '+r+' drops/min',
+      warn: r>250?'Very high drop rate — re-check inputs.':'',
+      spotChecks: [
+        { label:'15 s', count: in15s, tip:'count 15 s × 4' },
+        { label:'30 s', count: in30s, tip:'count 30 s × 2' },
+        { label:'1 min', count: in60s, tip:'count full minute' }
+      ]
+    };
+  }
+  pumpCalc() {
+    const v=this.num('pumpVolume'), h=this.num('pumpTime');
+    if ([v,h].some(isNaN)) return { err: 'Enter volume and time.' };
+    if (v<0||h<0) return { err: 'Values cannot be negative.' };
+    if (h===0) return { err: 'Time cannot be zero.' };
+    const r=Math.round(v/h);
+    return { val: String(r), unit: 'mL/hr', working: this.g(v)+'÷'+this.g(h)+' = '+r+' mL/hr', warn: r>1000?'Pump rate unusually high — double-check.':'' };
+  }
+  weightCalc() {
+    const w=this.num('weight'), mk=this.num('doseMgKg'), dz=this.num('dosesPerDay');
+    if ([w,mk,dz].some(isNaN)) return { err: 'Enter weight, dose ordered, and doses per day.' };
+    if (w<0||mk<0||dz<0) return { err: 'Values cannot be negative.' };
+    if (dz===0) return { err: 'Doses per day cannot be zero.' };
+    const total=w*mk, per=total/dz;
+    return { total: this.fmt(total,2), totalW: this.g(w)+'×'+this.g(mk)+' = '+this.fmt(total,2)+' mg/day', per: this.fmt(per,2), perW: this.fmt(total,2)+'÷'+this.g(dz)+' = '+this.fmt(per,2)+' mg', warn: (w>0&&(w<0.3||w>400))?'Weight looks implausible — confirm it is in kg.':'' };
+  }
+  infusionCalc() {
+    const v=this.num('volLeft'), r=this.num('rateMlHr');
+    if ([v,r].some(isNaN)) return { err: 'Enter volume left and pump rate.' };
+    if (v<0||r<0) return { err: 'Values cannot be negative.' };
+    if (r===0) return { err: 'Pump rate cannot be zero.' };
+    const tHr=v/r; let H=Math.floor(tHr), M=Math.round((tHr-H)*60); if(M===60){H++;M=0;}
+    return { val: H+'h '+M+'m', working: this.g(v)+'÷'+this.g(r)+' = '+this.fmt(tHr,2)+' hr' };
+  }
+  convertCalc() {
+    const type=this.state.f.convType||'kg_lb', x=this.num('convVal');
+    const defs = {
+      kg_lb: {f:2.20462,   from:'kg',  to:'lb',  dp:3, label:'× 2.20462'},
+      lb_kg: {f:1/2.20462, from:'lb',  to:'kg',  dp:3, label:'÷ 2.20462'},
+      g_mg:  {f:1000,      from:'g',   to:'mg',  dp:2, label:'× 1000'},
+      mg_g:  {f:0.001,     from:'mg',  to:'g',   dp:5, label:'÷ 1000'},
+      mg_mcg:{f:1000,      from:'mg',  to:'mcg', dp:2, label:'× 1000'},
+      mcg_mg:{f:0.001,     from:'mcg', to:'mg',  dp:5, label:'÷ 1000'},
+      L_mL:  {f:1000,      from:'L',   to:'mL',  dp:2, label:'× 1000'},
+      mL_L:  {f:0.001,     from:'mL',  to:'L',   dp:5, label:'÷ 1000'}
+    };
+    const d = defs[type] || defs.kg_lb;
+    if (isNaN(x)) return { err: 'Enter a value to convert.', unit: d.to };
+    if (x < 0) return { err: 'Value cannot be negative.', unit: d.to };
+    const out = x * d.f;
+    const dp = out < 0.01 ? 6 : out < 1 ? 5 : out < 100 ? 3 : 2;
+    return { val: this.fmt(out, dp), unit: d.to, working: this.g(x) + ' ' + d.from + ' ' + d.label + ' = ' + this.fmt(out, dp) + ' ' + d.to };
+  }
+  titrationCalc() {
+    const mg=this.num('drugMg'), bag=this.num('bagVol'), w=this.num('titWeight'), dose=this.num('ordDose');
+    if ([mg,bag,w,dose].some(isNaN)) return { err: 'Enter drug amount, bag volume, weight, and ordered dose.' };
+    if (mg<0||bag<0||w<0||dose<0) return { err: 'Values cannot be negative.' };
+    if (bag===0) return { err: 'Bag volume cannot be zero.' };
+    const conc=(mg*1000)/bag; if(conc===0) return { err: 'Concentration is zero — check drug amount.' };
+    const rate=(dose*w*60)/conc;
+    let warn='';
+    if (w>0&&(w<0.3||w>400)) warn='Weight looks implausible — confirm it is in kg.';
+    else if (rate>500) warn='Calculated rate is unusually high — re-check against pump drug library.';
+    return { conc: this.fmt(conc,1), concW:'('+this.g(mg)+'×1000)÷'+this.g(bag)+' = '+this.fmt(conc,1)+' µg/mL', rate: this.fmt(rate,2), rateW:'('+this.g(dose)+'×'+this.g(w)+'×60)÷'+this.fmt(conc,1)+' = '+this.fmt(rate,2)+' mL/hr', rateNum: rate, warn };
+  }
+  spo2Calc() {
+    const val = this.num('spo2Reading');
+    const cat = this.state.f.spo2Cat || 'general';
+    if (isNaN(val)) return { err: 'Enter the patient\'s current SpO₂ reading.' };
+    if (val < 0 || val > 100) return { err: 'SpO₂ must be between 0 and 100%.' };
+    const targets = {
+      general: { low: 92, high: 96, label: 'General adult', note: 'BTS/TSANZ target 92–96%' },
+      copd:    { low: 88, high: 92, label: 'COPD / hypercapnia risk', note: 'Lower target 88–92% to avoid suppressing hypoxic drive' },
+      acute:   { low: 94, high: 98, label: 'Acutely ill', note: 'Higher target 94–98% for sepsis, MI, stroke — not COPD' },
+      paeds:   { low: 91, high: 95, label: 'Paediatric / neonate', note: 'Confirm 91–95% with your unit protocol' }
+    };
+    const t = targets[cat];
+    let status, action, color, icon;
+    if (val >= t.low && val <= t.high) {
+      status = 'On target'; action = 'Continue current oxygen therapy and monitor as per local protocol.';
+      color = 'var(--primary)'; icon = 'check_circle';
+    } else if (val < t.low) {
+      const gap = t.low - val;
+      status = 'Below target (' + gap + '% low)';
+      action = gap >= 5
+        ? 'Significantly below target — escalate, increase oxygen delivery, and reassess urgently.'
+        : 'Below target — increase oxygen flow and reassess within a few minutes. If no improvement, escalate.';
+      color = 'var(--danger)'; icon = 'arrow_downward';
+    } else {
+      const gap = val - t.high;
+      status = 'Above target (' + gap + '% high)';
+      action = 'Hyperoxia can be harmful. Consider reducing oxygen flow to bring SpO₂ within target range. Reassess and confirm the order.';
+      color = 'var(--warn)'; icon = 'arrow_upward';
+    }
+    return { val: this.fmt(val, 1), status, action, color, icon, target: t.low + '–' + t.high + '%', label: t.label, note: t.note };
+  }
+
+  creatinineCalc() {
+    const wt = this.num('crWt'), age = this.num('crAge'), scr = this.num('crScr');
+    const sex = this.state.f.crSex || 'male';
+    if ([wt, age, scr].some(isNaN)) return { err: 'Enter weight, age, and serum creatinine.' };
+    if (wt <= 0 || age <= 0 || scr <= 0) return { err: 'All values must be greater than zero.' };
+    if (age > 120) return { err: 'Age looks implausible — confirm in years.' };
+    if (wt > 400) return { err: 'Weight looks implausible — confirm in kg.' };
+    // Cockcroft-Gault: CrCl = ((140 - age) × weight) / (72 × SCr) × (0.85 if female)
+    const factor = sex === 'female' ? 0.85 : 1.0;
+    const crcl = ((140 - age) * wt) / (72 * scr) * factor;
+    let stage = '', stageColor = 'var(--muted)';
+    if (crcl >= 90) { stage = 'G1 — normal or high'; stageColor = 'var(--primary)'; }
+    else if (crcl >= 60) { stage = 'G2 — mildly decreased'; stageColor = 'var(--primary)'; }
+    else if (crcl >= 45) { stage = 'G3a — mildly-moderately decreased'; stageColor = 'var(--warn)'; }
+    else if (crcl >= 30) { stage = 'G3b — moderately-severely decreased'; stageColor = 'var(--warn)'; }
+    else if (crcl >= 15) { stage = 'G4 — severely decreased'; stageColor = 'var(--danger)'; }
+    else { stage = 'G5 — kidney failure'; stageColor = 'var(--danger)'; }
+    const sexFact = sex === 'female' ? '× 0.85 (female)' : '';
+    return {
+      val: this.fmt(crcl, 1), unit: 'mL/min',
+      working: '((140 − ' + this.g(age) + ') × ' + this.g(wt) + ') ÷ (72 × ' + this.g(scr) + ') ' + sexFact + ' = ' + this.fmt(crcl, 1) + ' mL/min',
+      stage, stageColor,
+      warn: crcl < 30 ? 'Severely reduced — review ALL renally cleared drugs. Dose adjust or withhold per pharmacy / prescriber.' : (crcl < 60 ? 'Reduced clearance — check drug-specific renal dose adjustments.' : '')
+    };
+  }
+
+  reconstitutionCalc() {
+    const powder = this.num('recoPowder'), diluent = this.num('recoDiluent'), doseWant = this.num('recoDoseWant');
+    if ([powder, diluent].some(isNaN)) return { err: 'Enter the drug amount in the vial and the diluent volume.' };
+    if (powder <= 0 || diluent <= 0) return { err: 'All values must be greater than zero.' };
+    const conc = powder / diluent; // mg/mL
+    let volToDraw = null, drawWorking = '';
+    if (!isNaN(doseWant) && doseWant > 0) {
+      volToDraw = doseWant / conc;
+      drawWorking = this.g(doseWant) + ' mg ÷ ' + this.fmt(conc, 2) + ' mg/mL = ' + this.fmt(volToDraw, 2) + ' mL';
+    }
+    return {
+      conc: this.fmt(conc, 2), concWorking: this.g(powder) + ' mg ÷ ' + this.g(diluent) + ' mL = ' + this.fmt(conc, 2) + ' mg/mL',
+      volToDraw: volToDraw !== null ? this.fmt(volToDraw, 2) : null,
+      drawWorking,
+      warn: volToDraw !== null && volToDraw > diluent ? 'Volume to draw exceeds the vial — dose may require multiple vials or a more concentrated preparation.' : ''
+    };
+  }
+
+  bsaCalc() {
+    const wt = this.num('bsaWt'), ht = this.num('bsaHt');
+    if ([wt, ht].some(isNaN)) return { err: 'Enter weight (kg) and height (cm).' };
+    if (wt <= 0 || ht <= 0) return { err: 'All values must be greater than zero.' };
+    if (wt > 400 || ht > 280) return { err: 'Values look implausible — confirm units (kg, cm).' };
+    // Mosteller: BSA = sqrt((ht × wt) / 3600)
+    const bsa = Math.sqrt((ht * wt) / 3600);
+    return {
+      val: this.fmt(bsa, 2), unit: 'm²',
+      working: '√((' + this.g(ht) + ' × ' + this.g(wt) + ') ÷ 3600) = ' + this.fmt(bsa, 2) + ' m²',
+      warn: (bsa < 1.0 || bsa > 2.8) ? 'BSA is outside typical adult range (1.5–2.0 m²) — double-check weight and height.' : ''
+    };
+  }
+
+  cannulaCalc() {
+    const base = [
+      {g:'14G',color:'Orange',flow:'240–270',use:'Major trauma, resuscitation',lower:240,dot:'#e8842a'},
+      {g:'16G',color:'Grey',flow:'180–235',use:'Surgery, rapid transfusion',lower:180,dot:'#9498a0'},
+      {g:'18G',color:'Green',flow:'95–105',use:'Blood products, larger volumes',lower:95,dot:'#3f8a4a'},
+      {g:'20G',color:'Pink',flow:'60–67',use:'Standard adult access',lower:60,dot:'#e07ba0'},
+      {g:'22G',color:'Blue',flow:'35–42',use:'Fragile / difficult veins',lower:35,dot:'#3a72c4'},
+      {g:'24G',color:'Yellow',flow:'20–24',use:'Neonates, fragile veins',lower:20,dot:'#d8b23a'}
+    ];
+    const req=this.num('reqRate');
+    const mk=(pick)=>base.map((r,i)=>({g:r.g,color:r.color,flow:r.flow,use:r.use,dotStyle:{width:'12px',height:'12px',borderRadius:'50%',flex:'none',background:r.dot,border:'1px solid rgba(140,140,140,.35)'},rowStyle:{display:'flex',alignItems:'center',gap:'10px',padding:'10px 12px',borderRadius:'12px',background:i===pick?'var(--primary-soft)':'transparent',border:i===pick?'1px solid var(--primary-border)':'1px solid transparent'}}));
+    if (isNaN(req)) return { rows:mk(-1), err:'Enter the required rate (mL/hr) to check it against gauge flow limits.' };
+    if (req<0) return { rows:mk(-1), err:'Rate cannot be negative.' };
+    const pm=req/60; let pi=-1;
+    for (let i=base.length-1;i>=0;i--){if(base[i].lower>=pm){pi=i;break;}}
+    return { minVal:this.fmt(pm,2), rows:mk(pi), pick:pi===-1?'':('Smallest: '+base[pi].g+' ('+base[pi].color+'), max '+base[pi].flow+' mL/min.'), warn:pi===-1?'Rate exceeds all listed gauges — consider a larger line, pressure bag, or second access.':'' };
+  }
+
+  fieldsFor(tool) {
+    const f=this.state.f;
+    const T=(key,label,unit,im='decimal')=>({key,label,unitTxt:unit?'('+unit+')':'',value:f[key]!=null?f[key]:'',isInput:true,isSelect:false,options:[],inputMode:im});
+    const TI=(key,label,unit)=>T(key,label,unit,'numeric');
+    const S=(key,label,opts)=>({key,label,unitTxt:'',value:f[key]!=null?f[key]:opts[0].v,isInput:false,isSelect:true,options:opts.map(o=>({value:o.v,label:o.l})),inputMode:''});
+    const drop=[{v:'20',l:'20 gtt/mL — standard adult'},{v:'15',l:'15 gtt/mL — adult set'},{v:'12',l:'12 gtt/mL — blood / viscous'},{v:'10',l:'10 gtt/mL — adult / blood'},{v:'50',l:'50 gtt/mL — burette'},{v:'60',l:'60 gtt/mL — microdrip / paediatric'}];
+    const conv=[{v:'kg_lb',l:'kg → lb'},{v:'lb_kg',l:'lb → kg'},{v:'g_mg',l:'g → mg'},{v:'mg_mcg',l:'mg → mcg'},{v:'L_mL',l:'L → mL'}];
+    switch(tool){
+      case 'dose':          return [T('doseToGive','Dose to give','mg'),T('doseInVial','Dose in vial','mg'),T('diluent','Diluent volume','mL')];
+      case 'drip':          return [T('volume','Volume','mL'),T('time','Time','hr'),S('dropFactor','Drop factor',drop)];
+      case 'pump':          return [T('pumpVolume','Volume','mL'),T('pumpTime','Time','hr')];
+      case 'weight':        return [T('weight','Patient weight','kg'),T('doseMgKg','Dose ordered','mg/kg'),TI('dosesPerDay','Doses per day','')];
+      case 'infusion':      return [T('volLeft','Volume left','mL'),T('rateMlHr','Pump rate','mL/hr')];
+      case 'convert':       return [S('convType','Conversion',[{v:'kg_lb',l:'kg → lb'},{v:'lb_kg',l:'lb → kg'},{v:'g_mg',l:'g → mg'},{v:'mg_g',l:'mg → g'},{v:'mg_mcg',l:'mg → mcg'},{v:'mcg_mg',l:'mcg → mg'},{v:'L_mL',l:'L → mL'},{v:'mL_L',l:'mL → L'}]),T('convVal','Value','')];
+      case 'titration':     return [T('drugMg','Drug in bag','mg'),T('bagVol','Bag volume','mL'),T('titWeight','Patient weight','kg'),T('ordDose','Ordered dose','µg/kg/min')];
+      case 'creatinine':    return [T('crWt','Patient weight','kg'),TI('crAge','Age','years'),T('crScr','Serum creatinine','mg/dL'),S('crSex','Biological sex',[{v:'male',l:'Male'},{v:'female',l:'Female'}])];
+      case 'reconstitution':return [T('recoPowder','Drug in vial','mg'),T('recoDiluent','Diluent to add','mL'),T('recoDoseWant','Dose wanted — optional','mg')];
+      case 'bsa':           return [T('bsaWt','Weight','kg'),T('bsaHt','Height','cm')];
+      case 'oxygen':        return [
+        T('spo2Reading','Current SpO₂ reading','%'),
+        S('spo2Cat','Patient category',[
+          {v:'general',  l:'General adult'},
+          {v:'copd',     l:'COPD / hypercapnia risk'},
+          {v:'acute',    l:'Acutely ill (sepsis, MI, stroke)'},
+          {v:'paeds',    l:'Paediatric / neonate'}
+        ])
+      ];
+      case 'cannula':       return [T('reqRate','Required rate','mL/hr')];
+      default: return [];
+    }
+  }
+
+  blk(label, val, unit, working, opts={}) {
+    return { label, val: val||'0', unit: unit||'', working: working||'', hasWorking:!!working, sub:opts.sub||'', hasSub:!!opts.sub, size:opts.size||'clamp(52px,15vw,66px)', accent:!!opts.accent, top:!!opts.top, labelStyle:{fontFamily:'Roboto,sans-serif',fontSize:'11px',letterSpacing:'.12em',textTransform:'uppercase',fontWeight:700,color:opts.accent?'var(--tc)':'var(--muted)'}, wrapStyle:opts.top?{marginTop:'22px',paddingTop:'22px',borderTop:'1px solid var(--border)'}:{} };
+  }
+
+  resultFor(tool) {
+    if (tool==='dose'){const d=this.doseCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Volume to draw up',d.val,d.unit,d.working)],warn:d.warn};}
+    if (tool==='drip'){const d=this.dripCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Drip rate',d.val,d.unit,d.working,{sub:d.sub})],warn:d.warn,spotChecks:d.spotChecks};}
+    if (tool==='pump'){const d=this.pumpCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Pump rate',d.val,d.unit,d.working)],warn:d.warn};}
+    if (tool==='weight'){const d=this.weightCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Total per day',d.total,'mg',d.totalW,{size:'clamp(44px,13vw,58px)'}),this.blk('Per dose',d.per,'mg',d.perW,{size:'clamp(44px,13vw,58px)',top:true,accent:true})],warn:d.warn};}
+    if (tool==='infusion'){const d=this.infusionCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Time remaining',d.val,'',d.working)],warn:''};}
+    if (tool==='convert'){const d=this.convertCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Result',d.val,d.unit,d.working)],warn:''};}
+    if (tool==='titration'){const d=this.titrationCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Concentration',d.conc,'µg/mL',d.concW,{size:'clamp(40px,12vw,52px)'}),this.blk('Pump rate',d.rate,'mL/hr',d.rateW,{size:'clamp(46px,13vw,60px)',top:true,accent:true})],warn:d.warn,rateNum:d.rateNum};}
+    if (tool==='creatinine'){const d=this.creatinineCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('CrCl (Cockcroft–Gault)',d.val,d.unit,d.working)],warn:d.warn,stage:d.stage,stageColor:d.stageColor,hasStage:!!d.stage};}
+    if (tool==='reconstitution'){const d=this.reconstitutionCalc();if(d.err)return{err:d.err};const blocks=[this.blk('Concentration',d.conc,'mg/mL',d.concWorking,{size:'clamp(44px,13vw,58px)'})];if(d.volToDraw!==null)blocks.push(this.blk('Volume to draw',d.volToDraw,'mL',d.drawWorking,{size:'clamp(44px,13vw,58px)',top:true,accent:true}));return{blocks,warn:d.warn};}
+    if (tool==='bsa'){const d=this.bsaCalc();if(d.err)return{err:d.err};return{blocks:[this.blk('Body surface area',d.val,d.unit,d.working)],warn:d.warn};}
+    if (tool==='oxygen'){const d=this.spo2Calc();if(d.err)return{err:d.err};return{blocks:[this.blk('SpO₂',this.fmt(Number(this.state.f.spo2Reading||0),1),'%','Target: '+d.target+' · '+d.label)],warn:'',spo2Result:d};}
+    if (tool==='cannula'){const d=this.cannulaCalc();if(d.err&&!d.rows)return{err:d.err};return{blocks:[],warn:d.warn,cannulaResult:{minVal:d.minVal||'0',err:d.err||'',pick:d.pick||'',warn:d.warn||'',rows:d.rows||[]}}};
+    return { err:'' };
+  }
+
+  renderVals() {
+    const isDark = this.state.theme === 'dark';
+    const accentMap = {
+      Slate:  { d:['#94a3b8','rgba(148,163,184,.28)','rgba(148,163,184,.12)','rgba(148,163,184,.22)','#0f1318'], l:['#475569','rgba(71,85,105,.22)','rgba(71,85,105,.09)','rgba(71,85,105,.14)','#fff'] },
+      Orange: { d:['#fb923c','rgba(251,146,60,.32)','rgba(251,146,60,.14)','rgba(251,146,60,.35)','#1a0800'], l:['#ea580c','rgba(234,88,12,.25)','rgba(234,88,12,.10)','rgba(234,88,12,.18)','#fff'] },
+      Cyan:   { d:['#2fd4d4','rgba(47,212,212,.3)','rgba(47,212,212,.13)','rgba(47,212,212,.28)','#003331'], l:['#0a8c8c','rgba(10,140,140,.25)','rgba(10,140,140,.10)','rgba(10,140,140,.18)','#fff'] },
+      Violet: { d:['#a98bff','rgba(169,139,255,.3)','rgba(169,139,255,.14)','rgba(169,139,255,.28)','#1c0a45'], l:['#6a47d0','rgba(106,71,208,.25)','rgba(106,71,208,.10)','rgba(106,71,208,.18)','#fff'] },
+      Green:  { d:['#4cd47e','rgba(76,212,126,.3)','rgba(76,212,126,.13)','rgba(76,212,126,.28)','#00210f'], l:['#1f8a4c','rgba(31,138,76,.25)','rgba(31,138,76,.10)','rgba(31,138,76,.18)','#fff'] }
+    };
+    const acName = this.state.accent || this.props.accent || 'Slate';
+    const ac = (accentMap[acName]||accentMap.Slate)[isDark?'d':'l'];
+    const [primary, primaryBorder, primarySoft, primaryGlow, onPrimary] = ac;
+
+    const D = { '--bg':'#0a0a0d','--s1':'#121318','--s2':'#191c22','--s3':'#20232b','--nav-bg':'#0a0a0d','--text':'#eceef5','--muted':'#8891a4','--border':'#252932','--danger':'#ff6b78','--danger-soft':'rgba(255,107,120,.14)','--warn':'#f5c842','--warn-soft':'rgba(245,200,66,.14)','--shadow':'0 2px 8px rgba(0,0,0,.6)' };
+    const L = { '--bg':'#f0f2f8','--s1':'#ffffff','--s2':'#e8ecf4','--s3':'#ffffff','--nav-bg':'#ffffff','--text':'#0d1017','--muted':'#576070','--border':'#dde2ed','--danger':'#c0273a','--danger-soft':'rgba(192,39,58,.09)','--warn':'#9a6400','--warn-soft':'rgba(154,100,0,.10)','--shadow':'0 2px 8px rgba(0,0,0,.08)' };
+    const vars = isDark ? D : L;
+    vars['--primary']=primary; vars['--primary-border']=primaryBorder; vars['--primary-soft']=primarySoft; vars['--primary-glow']=primaryGlow; vars['--on-primary']=onPrimary;
+
+    const rootStyle = { ...vars, minHeight:'100vh', background:isDark?'#000':'#dce1ec', display:'flex', justifyContent:'center', alignItems:'stretch', fontFamily:'Roboto,system-ui,sans-serif' };
+    const iconBadgeStyle = { flex:'none', width:'44px', height:'44px', borderRadius:'13px', border:'1px solid var(--border)', background: isDark ? 'rgba(255,255,255,.92)' : 'var(--s2)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', padding:0, overflow:'hidden' };
+    const iconBadgeLgStyle = { width:'58px', height:'58px', borderRadius:'18px', border:'1px solid var(--border)', background: isDark ? 'rgba(255,255,255,.92)' : 'var(--s2)', display:'flex', alignItems:'center', justifyContent:'center', flex:'none', overflow:'hidden' };
+    const appStyle = { width:'100%', maxWidth:'440px', height:'100vh', margin:'0 auto', position:'relative', display:'flex', flexDirection:'column', overflow:'hidden', background:'var(--bg)', color:'var(--text)', borderLeft:'1px solid var(--border)', borderRight:'1px solid var(--border)' };
+
+    const showTit = this.props.showTitration !== false;
+    const TH = this.THEMES;
+    const allIds = ['dose','drip','pump','weight','infusion','convert','oxygen','titration','cannula','creatinine','reconstitution','bsa'];
+    const calcIds = allIds.filter(id => showTit || id !== 'titration');
+    const tab = this.state.tool ? this.state.tab : this.state.tab;
+
+    // current tool + theme
+    const tool = this.state.tool && (showTit || this.state.tool !== 'titration') ? this.state.tool : null;
+    const th = tool ? TH[tool] : null;
+
+    // 3D card factory — opaque elevated surfaces with depth shadows
+    const card3d = (rgb, danger, delay, extra) => {
+      // DARK: visible opaque surface lifted above OLED black
+      const darkBg = 'linear-gradient(150deg, rgba('+rgb+','+(danger?.32:.22)+') 0%, #1a1b22 45%, #14151b 100%)';
+      const darkShadow = [
+        'inset 0 1.5px 0 rgba(255,255,255,.13)',        // top-face highlight
+        'inset 1px 0 0 rgba(255,255,255,.04)',           // left-face highlight
+        'inset -1px 0 0 rgba(0,0,0,.2)',                 // right-face shadow
+        '0 0 0 1px rgba(0,0,0,.7)',                      // crisp outer edge
+        '0 1px 0 rgba('+rgb+','+(danger?.6:.42)+')',     // colored lip (bottom edge)
+        '0 3px 0 rgba(0,0,0,.9)',                        // black depth below
+        '0 5px 0 rgba(0,0,0,.4)',                        // secondary depth
+        '0 10px 28px rgba('+rgb+','+(danger?.2:.13)+')', // colored ambient glow
+        '0 20px 55px rgba(0,0,0,.55)'                    // deep scene shadow
+      ].join(',');
+      // LIGHT: white card with colored tinted top + shadow stack
+      const lightBg = 'linear-gradient(150deg, rgba('+rgb+','+(danger?.18:.12)+') 0%, #ffffff 55%)';
+      const lightShadow = [
+        'inset 0 1px 0 rgba(255,255,255,.95)',
+        'inset 0 -1px 0 rgba(0,0,0,.04)',
+        '0 0 0 1px rgba('+rgb+','+(danger?.22:.15)+')',
+        '0 2px 0 rgba('+rgb+','+(danger?.38:.26)+')',
+        '0 4px 0 rgba(0,0,0,.07)',
+        '0 8px 22px rgba('+rgb+','+(danger?.14:.09)+')',
+        '0 18px 40px rgba(0,0,0,.08)'
+      ].join(',');
+      return {
+        background: isDark ? darkBg : lightBg,
+        border: 'none', borderRadius: '20px',
+        boxShadow: isDark ? darkShadow : lightShadow,
+        animation: 'cardIn .38s cubic-bezier(.2,0,0,1) both',
+        animationDelay: (delay||0)+'ms',
+        willChange: 'transform', outline: 'none',
+        cursor: 'pointer', fontFamily: 'Roboto,sans-serif', color: 'var(--text)',
+        transition: 'transform .15s cubic-bezier(.2,0,0,1)',
+        ...extra
+      };
+    };
+    const mkCard = (id, delay) => {
+      const m = TH[id]; const isDanger = id === 'titration';
+      return {
+        id, name: m.name, desc: m.desc, icon: m.icon,
+        cardStyle: { ...card3d(m.rgb, isDanger, delay, { display:'flex', alignItems:'center', gap:'16px', textAlign:'left', padding:'19px 18px', width:'100%' }) },
+        iconWrap: { width:'52px', height:'52px', borderRadius:'17px', display:'flex', alignItems:'center', justifyContent:'center', flex:'none', background:'rgba('+m.rgb+',.18)', boxShadow:'0 0 0 1px rgba('+m.rgb+',.3), 0 4px 18px rgba('+m.rgb+',.28), inset 0 1px 0 rgba(255,255,255,.15)' },
+        iconStyle: { fontFamily:"'Material Symbols Rounded'", fontSize:'28px', color:m.color, fontVariationSettings:"'FILL' 1" },
+        arrowStyle: { color:m.color, opacity:.7, display:'flex', alignItems:'center' }
+      };
+    };
+    const mkGrid = (id, delay) => {
+      const m = TH[id]; const isDanger = id === 'titration';
+      return {
+        id, name: m.name, desc: m.desc, icon: m.icon,
+        gridStyle: { ...card3d(m.rgb, isDanger, delay, { position:'relative', overflow:'hidden', textAlign:'left', padding:'17px 16px 20px' }) },
+        dotPip: { position:'absolute', top:'15px', right:'15px', width:'7px', height:'7px', borderRadius:'50%', background:m.color, boxShadow:'0 0 10px '+m.color+', 0 0 20px rgba('+m.rgb+',.4)' },
+        gridIconWrap: { width:'44px', height:'44px', borderRadius:'14px', display:'flex', alignItems:'center', justifyContent:'center', background:'rgba('+m.rgb+',.16)', boxShadow:'0 0 0 1px rgba('+m.rgb+',.25), 0 4px 14px rgba('+m.rgb+',.22), inset 0 1px 0 rgba(255,255,255,.12)' },
+        gridIconStyle: { fontFamily:"'Material Symbols Rounded'", fontSize:'24px', color:m.color, fontVariationSettings:"'FILL' 1" }
+      };
+    };
+    const mkRow = (id, delay) => {
+      const m = TH[id]; const isDanger = id === 'titration';
+      return {
+        id, name: m.name, desc: m.desc, icon: m.icon, danger: isDanger,
+        rowStyle: { ...card3d(m.rgb, isDanger, delay, { display:'flex', alignItems:'center', gap:'13px', textAlign:'left', padding:'14px 16px', width:'100%' }) },
+        rowIconWrap: { width:'42px', height:'42px', borderRadius:'13px', display:'flex', alignItems:'center', justifyContent:'center', flex:'none', background:'rgba('+m.rgb+',.15)', boxShadow:'0 0 0 1px rgba('+m.rgb+',.22), 0 3px 12px rgba('+m.rgb+',.2), inset 0 1px 0 rgba(255,255,255,.1)' },
+        rowIconStyle: { fontFamily:"'Material Symbols Rounded'", fontSize:'23px', color:m.color, fontVariationSettings:"'FILL' 1" }
+      };
+    };
+
+    // pinned / recent / default featured
+    const pins = this.state.pinnedTools;
+    const recents = Array.isArray(this.state.recentTools) ? this.state.recentTools : [];
+    let featuredIds, featuredLabel;
+    const validPins = pins ? pins.filter(id => calcIds.includes(id)) : [];
+    const validRecents = recents.filter(id => calcIds.includes(id));
+    if (validPins.length) {
+      featuredIds = validPins.slice(0, 3);
+      featuredLabel = 'Pinned';
+    } else if (validRecents.length) {
+      featuredIds = validRecents.slice(0, 3);
+      featuredLabel = 'Recent';
+    } else {
+      featuredIds = ['dose','drip', showTit?'titration':'pump'].filter(id => calcIds.includes(id));
+      featuredLabel = 'Quick access';
+    }
+    if (!featuredIds || !featuredIds.length) featuredIds = ['dose','drip','pump'].filter(id => calcIds.includes(id));
+    const featured = featuredIds.map((id,i) => mkCard(id, i*55));
+    const addableIds = calcIds.filter(id => !featuredIds.includes(id) && !!TH[id]);
+    const addableTools = addableIds.map(id => ({
+      id, name: TH[id].name, icon: TH[id].icon, color: TH[id].color,
+      chipStyle: { display:'flex', alignItems:'center', gap:'7px', padding:'9px 13px', borderRadius:'13px', background:'rgba('+TH[id].rgb+',.12)', border:'none', cursor:'pointer', fontFamily:'Roboto,sans-serif', boxShadow:'0 0 0 1px rgba('+TH[id].rgb+',.22), 0 2px 0 rgba(0,0,0,.4)' }
+    }));
+    const gridIds = calcIds.filter(id => !featuredIds.includes(id) && id !== 'oxygen' && id !== 'cannula').concat(['oxygen','creatinine','reconstitution','bsa'].filter(id => calcIds.includes(id))).slice(0,8);
+    const gridTools = gridIds.map((id,i) => mkGrid(id, i*40));
+
+    const q = (this.state.query||'').trim().toLowerCase();
+    const toolsList = calcIds.filter(id => !q || TH[id].name.toLowerCase().includes(q) || TH[id].desc.toLowerCase().includes(q)).map((id,i) => mkRow(id, i*35));
+
+    // nav
+    const navDefs = [{id:'home',label:'Home',icon:'home',anim:'tab-home'},{id:'tools',label:'Tools',icon:'calculate',anim:'tab-calc'},{id:'reference',label:'Reference',icon:'menu_book',anim:'tab-book'},{id:'settings',label:'Settings',icon:'settings',anim:'tab-gear'}];
+    const curTab = this.state.tab;
+    const navItems = navDefs.map(n => {
+      // active = the tab you're "in", even when a tool overlay is open on top of it
+      const active = curTab === n.id;
+      const bright = active && !tool; // full brightness only when not covered by overlay
+      return { id:n.id, label:n.label, icon:n.icon, weight:active?700:500,
+        labelColor: bright ? primary : active ? 'var(--muted)' : 'var(--muted)',
+        pillStyle:{width:'44px',height:'44px',borderRadius:'14px',display:'flex',alignItems:'center',justifyContent:'center',background:'transparent',border:'none'},
+        iconStyle:{fontFamily:"'Material Symbols Rounded'",fontSize:'24px',color:bright?primary:active?'var(--muted)':'var(--muted)',fontVariationSettings:bright?"'FILL' 1":"'FILL' 0",animation:bright?(n.anim+' .45s cubic-bezier(.34,1.56,.64,1) both'):'none',display:'block'},
+        dotStyle:{width:active?'18px':'4px',height:'3px',borderRadius:'2px',background:active?primary:'var(--border)',transition:'width .28s cubic-bezier(.34,1.56,.64,1), background .2s',boxShadow:active?('0 0 7px '+primary):'none'} };
+    });
+
+    // overlay
+    const overlayAnim = this.state.closing ? 'slideDown 280ms cubic-bezier(.4,0,1,1) forwards' : 'slideUp 320ms cubic-bezier(.2,0,0,1)';
+    const overlayWrapStyle = { position:'absolute', inset:'0', zIndex:40, display:'flex', flexDirection:'column', background:'var(--bg)', animation:overlayAnim, willChange:'transform', '--tc': th?th.color:primary, '--tg': th?'rgba('+th.rgb+',.28)':primaryGlow, '--on-tc': isDark?'#000':'#fff' };
+    const overlayHeaderStyle = { flex:'none', background: th?('radial-gradient(ellipse 130% 240px at 50% -40px, rgba('+th.rgb+',.26) 0%, transparent 65%)'):undefined, animation:'haloFade .4s ease' };
+    const overlayIconBadge = { width:'72px', height:'72px', borderRadius:'22px', background: th?('linear-gradient(145deg, rgba('+th.rgb+',.32) 0%, rgba('+th.rgb+',.16) 100%)'):'var(--s2)', border:'none', display:'flex', alignItems:'center', justifyContent:'center', flex:'none', boxShadow: th?['0 0 0 1px rgba('+th.rgb+',.4)','0 0 28px rgba('+th.rgb+',.35)','0 0 56px rgba('+th.rgb+',.14)','inset 0 1px 0 rgba(255,255,255,.16)'].join(','):'none', animation:'iconPop .4s cubic-bezier(.34,1.56,.64,1)' };
+    const iconAnimMap = { dose:'ic-dose .7s cubic-bezier(.34,1.56,.64,1) .15s both', drip:'ic-drip .55s cubic-bezier(.34,1.56,.64,1) .15s both', pump:'ic-pump .55s cubic-bezier(.2,0,0,1) .15s both', weight:'ic-weight .6s cubic-bezier(.34,1.56,.64,1) .15s both', infusion:'ic-clock .55s cubic-bezier(.2,0,0,1) .15s both', convert:'ic-sync .75s cubic-bezier(.2,0,0,1) .15s both', oxygen:'ic-breathe .6s cubic-bezier(.34,1.56,.64,1) .15s both', titration:'ic-heart .85s ease .15s both', cannula:'ic-cannula .5s cubic-bezier(.34,1.56,.64,1) .15s both' };
+    const overlayIconStyle = { fontFamily:"'Material Symbols Rounded'", fontSize:'38px', color:th?th.color:primary, fontVariationSettings:"'FILL' 1", display:'block', animation: tool ? (iconAnimMap[tool]||'iconPop .4s both') : 'none' };
+
+    // shared input/working styles
+    const inputStyle = { width:'100%', height:'38px', padding:'0', fontSize:'26px', lineHeight:'1', fontFamily:"'Roboto Mono',monospace", fontWeight:600, color:'var(--text)', background:'transparent', border:'none', outline:'none', WebkitAppearance:'none', MozAppearance:'none', letterSpacing:'-.02em' };
+    const selectStyle = { width:'100%', height:'54px', padding:'0 44px 0 16px', fontSize:'15px', fontFamily:'Roboto,sans-serif', fontWeight:500, color:'var(--text)', background:'transparent', border:'none', outline:'none', cursor:'pointer', WebkitAppearance:'none', appearance:'none' };
+    const selectWrapStyle = { position:'relative', background:'var(--bg)', borderRadius:'12px', border:'1px solid var(--border)', overflow:'hidden' };
+    const toolHints = {
+      dose:     'Formula: (dose ÷ vial strength) × diluent volume. Caution if drawing > 5 mL for IM/SC — consider a more concentrated vial. Confirm dose, route and patient ID before drawing.',
+      drip:     'Formula: (volume × drop factor) ÷ (time × 60). Drop factor is printed on the IV set packet — 20 is the common adult default, 60 for paediatric/microdrip. Spot-check: count drops for 15 s × 4.',
+      pump:     'Formula: volume ÷ time. Programme this rate directly and confirm against the order. Check the line is patent and the infusion site is not infiltrated before starting.',
+      weight:   'Formula: weight × mg/kg = total daily dose ÷ doses/day = per dose. Use actual body weight unless the order specifies IBW or ABW. Renal and hepatic impairment may require dose reduction — check the order.',
+      infusion: 'Formula: volume ÷ rate. Assumes the pump is running at the stated rate — update if the rate changes. Factor in any volume in the giving set if precision matters.',
+      convert:  'kg↔lb: factor 2.20462 (exact). g→mg, mg→mcg, L→mL: all ×1000. For clinical dosing always work in the unit stated on the order — convert only when necessary.',
+      titration:    'Formula: concentration (µg/mL) = (drug mg × 1000) ÷ bag volume. Pump rate (mL/hr) = (dose × weight × 60) ÷ concentration. Verify concentration against the pharmacy label and cross-check with the pump drug library before infusing.',
+      oxygen:       'SpO₂ is measured by pulse oximetry, not calculated. Enter the reading and select the patient category to check whether it falls within the evidence-based target range. Confirm the probe site is well-perfused — peripheral vasoconstriction, nail polish, and motion artefact can lower readings.',
+      cannula:      'Flow rate depends on cannula gauge, length, tubing, needle-free valves, and fluid viscosity. Rates shown are approximate gravity-flow maxima from manufacturer data — actual rates may vary. Always verify the gauge on the packaging.',
+      creatinine:   'Cockcroft–Gault formula. Serum creatinine must be in mg/dL (divide µmol/L by 88.4 to convert). Uses actual body weight — for obese patients consider using ideal or adjusted body weight. Result is an estimate: use for drug dose adjustment, not diagnosis.',
+      reconstitution:'Concentration = drug (mg) ÷ diluent added (mL). Draw-up volume = dose wanted ÷ concentration. Check the product monograph for the correct diluent, volume, and any stability limits after reconstitution.',
+      bsa:          'Mosteller formula: BSA = √((height × weight) ÷ 3600). Used for chemotherapy and paediatric dosing where weight alone is insufficient. Confirm with the prescriber which BSA formula is required — du Bois and Haycock give slightly different results.'
+    };
+    const toolHint = tool ? (toolHints[tool]||'') : '';
+    const toolHasHint = !!toolHint;
+    const helperStyle = { display:'flex', gap:'10px', padding:'12px 14px', background:th?'rgba('+th.rgb+',.1)':'var(--s2)', borderRadius:'13px', fontSize:'12px', color:'var(--text)', lineHeight:'1.5', marginBottom:'18px' };
+    const workingStyle = { marginTop:'13px', padding:'12px 14px', background:'var(--s2)', borderRadius:'12px', fontFamily:"'Roboto Mono',monospace", fontSize:'12.5px', color:'var(--muted)', lineHeight:'1.55', wordBreak:'break-word' };
+    const resultCardStyle = { background:'var(--s1)', border: th?'1px solid rgba('+th.rgb+',.2)':'1px solid var(--border)', borderRadius:'22px', padding:'24px 20px', marginBottom:'16px', boxShadow: th?('0 0 0 1px rgba('+th.rgb+',.06), 0 20px 50px rgba('+th.rgb+',.10)'):'var(--shadow)' };
+
+    // FAB
+    const fabBtnStyle = { width:'62px', height:'62px', borderRadius:'21px', border:'none', cursor:'pointer', background:primary, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 8px 28px '+primaryGlow+', 0 2px 8px rgba(0,0,0,.4)', willChange:'transform', transition:'transform .15s cubic-bezier(.2,0,0,1)' };
+    const fabActions = ['dose','drip', showTit?'titration':'pump'].map((id,i) => ({ id, name:TH[id].name, icon:TH[id].icon, color:TH[id].color, desc:TH[id].desc, fabDelay:'animation-delay:'+(i*55)+'ms;', iconWrap:{width:'38px',height:'38px',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',background:'rgba('+TH[id].rgb+',.16)',boxShadow:'0 0 0 1px rgba('+TH[id].rgb+',.25)'} }));
+    const fabIcon = this.state.fabOpen ? 'close' : 'calculate';
+
+    // result bar
+    let showResultBar=false, resultBarLabel='', resultBarVal='—', resultBarUnit='';
+    let resultBarOuter={}, resultBarInner={};
+    if (tool && tool!=='oxygen' && tool!=='cannula') {
+      const res2 = this.resultFor(tool);
+      if (!res2.err && res2.blocks && res2.blocks.length>0) {
+        const blk = res2.blocks.find(b=>b.accent)||res2.blocks[res2.blocks.length-1];
+        resultBarLabel=blk.label; resultBarVal=blk.val; resultBarUnit=blk.unit; showResultBar=true;
+        const onTc = isDark ? '#000' : '#fff';
+        resultBarOuter = {}; resultBarInner = {}; // replaced by sticky footer
+      }
+    }
+
+    // accent swatches
+    const swColors = { Slate:['#94a3b8','#475569'], Orange:['#fb923c','#ea580c'], Cyan:['#2fd4d4','#0a8c8c'], Violet:['#a98bff','#6a47d0'], Green:['#4cd47e','#1f8a4c'] };
+    const accentSwatches = ['Slate','Orange','Cyan','Violet','Green'].map(id => ({ id, active:acName===id, style:{width:'48px',height:'48px',borderRadius:'15px',cursor:'pointer',background:swColors[id][isDark?0:1],border:acName===id?'2.5px solid var(--text)':'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',padding:0} }));
+    const switchOn = isDark;
+    const switchTrack = { width:'52px',height:'32px',borderRadius:'16px',border:'none',cursor:'pointer',flex:'none',background:switchOn?primary:'var(--border)',position:'relative',transition:'background .2s',padding:0 };
+    const switchThumb = { position:'absolute',top:'4px',left:switchOn?'24px':'4px',width:'24px',height:'24px',borderRadius:'50%',background:'#fff',transition:'left .2s cubic-bezier(.34,1.56,.64,1)',boxShadow:'0 1px 4px rgba(0,0,0,.35)' };
+
+    // overlay tool data
+    let overlayTitle='', overlaySub='', overlayIcon='', toolIsDrip=false, toolIsTitration=false, toolIsOxygen=false, toolIsCannula=false, cannulaResult=null, spo2Result=null;
+    let curFields=[], curErr=false, curErrMsg='', curOk=false, curBlocks=[], curWarn=false, curWarnMsg='';
+    let curStage=false, curStageLabel='', curStageColor='var(--muted)';
+    let spotChecks=[], hasSpotChecks=false;
+    let titCheckVal=this.state.titCheck, titCheckEmpty=true, titCheckMatch=false, titCheckMismatch=false;
+    if (tool) {
+      const m = TH[tool]; overlayTitle=m.name; overlaySub=m.desc; overlayIcon=m.icon;
+      toolIsDrip=tool==='drip'; toolIsTitration=tool==='titration'; toolIsOxygen=tool==='oxygen';
+      const rawFields = this.fieldsFor(tool);
+      const openDD = this.state.openDropdown;
+      const thRgb = th ? th.rgb : '148,163,184';
+      const panelBg = isDark ? '#1e2028' : '#ffffff';
+      const panelShadow = isDark
+        ? '0 0 0 1px rgba(255,255,255,.08), 0 8px 0 rgba(0,0,0,.7), 0 20px 60px rgba(0,0,0,.8)'
+        : '0 0 0 1px rgba(0,0,0,.10), 0 4px 0 rgba(0,0,0,.08), 0 12px 40px rgba(0,0,0,.14)';
+      curFields = rawFields.map((fld,i) => {
+        const isFirst=i===0, isLast=i===rawFields.length-1;
+        const isOpen = fld.isSelect && openDD===fld.key;
+        const curVal = this.state.f[fld.key] || (fld.options[0]?fld.options[0].value:'');
+        const selLabel = fld.isSelect ? (fld.options.find(o=>o.value===curVal)||{label:curVal}).label : '';
+        // validity
+        const rawV = this.state.f[fld.key];
+        const numV = Number(rawV);
+        const isValid = fld.isSelect ? true : (rawV != null && String(rawV).trim() !== '' && Number.isFinite(numV) && numV > 0);
+        const validBorder = isValid ? '1px solid rgba('+thRgb+',.5)' : '1px solid var(--border)';
+        const validCheck = isValid;
+        const unitRaw = fld.unitTxt ? fld.unitTxt.replace(/[()]/g,'').trim() : '';
+        const hasUnit = !!unitRaw && fld.isInput;
+        const enrichedOpts = fld.isSelect ? fld.options.map((o,oi)=>({
+          value:o.value, label:o.label, selected:o.value===curVal,
+          optStyle:{
+            width:'100%', display:'flex', alignItems:'center', gap:'10px',
+            padding:'13px 18px',
+            background: o.value===curVal ? (isDark?'rgba('+thRgb+',.18)':'rgba('+thRgb+',.10)') : 'transparent',
+            border:'none', cursor:'pointer', fontFamily:'Roboto,sans-serif',
+            borderBottom: oi<fld.options.length-1 ? '1px solid '+(isDark?'rgba(255,255,255,.05)':'rgba(0,0,0,.06)') : 'none',
+            color: o.value===curVal ? (isDark?'#fff':'#000') : (isDark?'#eceef5':'#0d1017')
+          },
+          labelStyle:{ flex:'1', fontSize:'15px', fontWeight: o.value===curVal?'700':'400', textAlign:'left', fontFamily:'Roboto,sans-serif', minWidth:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }
+        })) : fld.options;
+        return {
+          ...fld, value:curVal, options:enrichedOpts, selectedLabel:selLabel, dropOpen:isOpen,
+          isValid, validCheck, hasUnit, unitRaw,
+          dropTrigger:{ width:'100%', height:'44px', padding:'0 14px 0 16px', display:'flex', alignItems:'center', gap:'10px', background:'transparent', border:'none', cursor:'pointer', fontFamily:'Roboto,sans-serif' },
+          chevronStyle:{ fontFamily:"'Material Symbols Rounded'", fontSize:'22px', color: isOpen?(th?th.color:primary):(isDark?'#8891a4':'#57606f'), transition:'transform .22s cubic-bezier(.34,1.2,.64,1), color .15s', transform:isOpen?'rotate(180deg)':'rotate(0deg)', display:'block' },
+          dropPanel:{ position:'absolute', top:'100%', left:'-1px', right:'-1px', zIndex:200, background:isDark?'#1a1c25':'#f4f5f8', borderRadius:'0 0 16px 16px', boxShadow:'0 8px 24px rgba(0,0,0,.4), 0 1px 0 rgba(0,0,0,.2)', overflow:'hidden', animation:'tabIn .18s cubic-bezier(.2,0,0,1)', borderTop:'1px solid '+(isDark?'rgba(255,255,255,.07)':'rgba(0,0,0,.08)') },
+          groupWrap:{ padding:'0', position:'relative' },
+          cardWrap:{ background:'var(--s2)', border: validBorder, borderRadius: isOpen ? '16px 16px 0 0' : '16px', transition:'border-color .25s, box-shadow .25s, border-radius .18s', overflow: isOpen ? 'visible' : 'hidden', boxShadow: isValid ? ('0 0 0 1px rgba('+thRgb+',.15), 0 4px 20px rgba('+thRgb+',.1)') : 'none', minHeight:'78px', display:'flex', flexDirection:'column', justifyContent:'center', position:'relative', zIndex: isOpen ? 60 : 'auto' }
+        };
+      });
+      const res=this.resultFor(tool);
+      curErr=!!res.err; curErrMsg=res.err||''; curOk=!res.err; curBlocks=res.blocks||[]; curWarn=!!res.warn; curWarnMsg=res.warn||'';
+      if (!res.err && res.stage) { curStage=true; curStageLabel=res.stage; curStageColor=res.stageColor||'var(--muted)'; }
+      if (res.cannulaResult) { cannulaResult = res.cannulaResult; toolIsCannula = true; }
+      if (res.spo2Result) { spo2Result = res.spo2Result; }
+      const safeRgb = th ? th.rgb : '148,163,184';
+      spotChecks = (!res.err && res.spotChecks) ? res.spotChecks.map((sc,i) => ({
+        ...sc,
+        chipStyle: { flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', padding:'11px 8px', background:'rgba('+safeRgb+',.1)', border:'1px solid rgba('+safeRgb+',.2)', borderRadius:'12px', cursor:'default' }
+      })) : [];
+      hasSpotChecks = spotChecks.length > 0;
+      if (toolIsTitration && !res.err) {
+        const cv=this.state.titCheck;
+        if (!cv||String(cv).trim()==='') { titCheckEmpty=true; }
+        else { const cn=Number(cv); titCheckEmpty=false; if(Number.isFinite(cn)&&Math.abs(cn-res.rateNum)<=.05) titCheckMatch=true; else titCheckMismatch=true; }
+      }
+    }
+
+    return {
+      rootStyle, appStyle,
+      onInput:this.set, openTool:this.openTool, closeTool:this.closeTool, setTab:this.setTab, setTabClose:this.setTabClose,
+      toggleTheme:this.toggleTheme, setAccent:this.setAccent, toggleFab:this.toggleFab, openProfile:this.openProfile, closeProfile:this.closeProfile,
+      f:this.state.f, query:this.state.query,
+      themeIcon:isDark?'dark_mode':'light_mode', themeLabel:isDark?'Dark':'Light', themeStateLabel:isDark?'On · night shifts':'Off · bright clinical',
+      barSub: curTab==='home'?'Clinical calculators':curTab==='tools'?'Calculators':curTab==='reference'?'Reference':'Settings',
+      greeting: new Date().getHours()<12?'Good morning':new Date().getHours()<17?'Good afternoon':'Good evening',
+      isHome:curTab==='home', isTools:curTab==='tools', isReference:curTab==='reference', isSettings:curTab==='settings',
+      featured, gridTools, toolsList, navItems,
+      noResults: curTab==='tools' && toolsList.length===0,
+      fabActions, fabBtnStyle, fabIcon, fabOpen:this.state.fabOpen, fabIconRotate:this.state.fabOpen?'rotate(135deg)':'none',
+      showFab:(curTab==='home'||curTab==='tools')&&!tool,
+      profileOpen:this.state.profileOpen, accentSwatches, switchTrack, switchThumb,
+      featuredLabel, addableTools, editingPinned:this.state.editingPinned, notEditingPinned:!this.state.editingPinned,
+      startEditPinned:this.startEditPinned, doneEditPinned:this.doneEditPinned, removePin:this.removePin, addPin:this.addPin,
+      toolOpen:!!tool, overlayWrapStyle, overlayHeaderStyle, overlayIconBadge, overlayIconStyle, overlayTitle, overlaySub, overlayIcon, toolHint, toolHasHint,
+      toggleDropdown:this.toggleDropdown, selectOption:this.selectOption, closeDropdown:this.closeDropdown, hasOpenDropdown:!!this.state.openDropdown,
+      toolIsDrip, toolIsTitration, toolIsOxygen, toolIsCannula, cannulaResult, spo2Result,
+      curFields, inputStyle, selectStyle, helperStyle, workingStyle, resultCardStyle,
+      showResultCard: !toolIsCannula && !toolIsOxygen,
+      curErr, curErrMsg, curOk, curBlocks, curWarn, curWarnMsg,
+      curStage, curStageLabel, curStageColor,
+      spotChecks, hasSpotChecks,
+      titCheckVal, titCheckEmpty, titCheckMatch, titCheckMismatch,
+      showResultBar:false, resultBarLabel, resultBarVal, resultBarUnit, resultBarOuter:{}, resultBarInner:{},
+      showStickyFooter: showResultBar && !!tool && !toolIsCannula && !toolIsOxygen,
+      showOxygenFooter: toolIsOxygen && !!spo2Result,
+      showOxygenEmpty: toolIsOxygen && !spo2Result,
+      oxygenFooterStatus: spo2Result ? spo2Result.status : '',
+      oxygenFooterTarget: spo2Result ? ('Target: '+spo2Result.target) : '',
+      oxygenFooterColor: spo2Result ? spo2Result.color : primary,
+      oxygenFooterIcon: spo2Result ? spo2Result.icon : 'favorite',
+      showFooterEmpty: !!tool && !showResultBar && !toolIsCannula && !toolIsOxygen,
+      stickyFooterStyle: { flex:'none', display:'flex', alignItems:'center', gap:'14px', padding:'14px 20px 18px', background: th?th.color:primary, boxShadow:'0 -1px 0 rgba(255,255,255,.08)', '--on-tc': isDark?'rgba(0,0,0,.85)':'rgba(255,255,255,.95)' },
+      stickyFooterEmptyStyle: { flex:'none', display:'flex', alignItems:'center', gap:'10px', padding:'13px 20px 16px', background:'var(--s2)', borderTop:'1px solid var(--border)' },
+      iconBadgeStyle, iconBadgeLgStyle,
+      canHasErr:false, canErr:'', canMinVal:'0', canRows:[], canPick:'', canHasPick:false, canWarn:'', canHasWarn:false
+    };
+  }
+}
+</script>
+</body>
+</html>
