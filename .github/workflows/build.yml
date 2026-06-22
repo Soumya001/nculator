@@ -17,21 +17,13 @@ jobs:
         run: cd bedside-native && bash setup-eas.sh
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        continue-on-error: true
-      - name: Build APK
-        run: cd bedside-native && eas build --platform android --profile preview --non-interactive --wait
+      - name: Show app.json projectId
+        run: cat bedside-native/app.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['expo'].get('extra',{}))"
+      - name: EAS account info
+        run: cd bedside-native && eas whoami && eas project:info 2>&1 || echo "project:info failed"
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-      - name: Download APK
-        run: |
-          URL=$(cd bedside-native && eas build:list --platform android --status finished --limit 1 --json --non-interactive 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['artifacts']['buildUrl'])" 2>/dev/null || echo '')
-          [ -n "$URL" ] && curl -L "$URL" -o nculater.apk && echo 'Downloaded APK'
+      - name: Build APK (no wait)
+        run: cd bedside-native && eas build --platform android --profile preview --non-interactive 2>&1
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-        continue-on-error: true
-      - uses: actions/upload-artifact@v4
-        with:
-          name: nculater-apk
-          path: nculater.apk
-          if-no-files-found: warn
-          retention-days: 90
