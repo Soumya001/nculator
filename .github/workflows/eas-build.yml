@@ -23,38 +23,39 @@ jobs:
         with:
           node-version: 18
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
 
-      - name: Install dependencies
+      - name: Install app dependencies
         working-directory: bedside-native
         run: npm install --legacy-peer-deps
 
-      - name: Build Android APK on EAS
+      - name: Verify EAS CLI + token
+        run: eas whoami
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android APK on EAS servers
         working-directory: bedside-native
         run: eas build --platform android --profile preview --non-interactive --wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Download APK from EAS
+      - name: Get APK URL and download
         working-directory: bedside-native
         run: |
-          URL=$(eas build:list --platform android --status finished --limit 1 --json --non-interactive 2>/dev/null | python3 -c "import sys,json; data=json.load(sys.stdin); print(data[0]['artifacts']['buildUrl'])" 2>/dev/null || echo "")
-          if [ -n "$URL" ]; then
-            curl -L "$URL" -o ../nculater-android.apk && echo "Downloaded APK"
-          fi
+          URL=$(eas build:list --platform android --status finished --limit 1 --json --non-interactive 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0]['artifacts']['buildUrl'])" 2>/dev/null || echo "")
+          echo "APK_URL=$URL" >> $GITHUB_ENV
+          if [ -n "$URL" ]; then curl -L "$URL" -o ../nculater.apk && echo "✓ Downloaded APK"; fi
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         continue-on-error: true
 
-      - name: Upload APK artifact
+      - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: nculater-android-apk
-          path: nculater-android.apk
+          path: nculater.apk
           retention-days: 90
           if-no-files-found: warn
 
@@ -71,23 +72,18 @@ jobs:
         with:
           node-version: 18
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install EAS CLI
+        run: npm install -g eas-cli@latest
 
-      - name: Install dependencies
+      - name: Install app dependencies
         working-directory: bedside-native
         run: npm install --legacy-peer-deps
 
-      - name: Build iOS on EAS
+      - name: Build iOS on EAS servers
         working-directory: bedside-native
         run: eas build --platform ios --profile preview --non-interactive --wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
