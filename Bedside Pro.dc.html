@@ -87,7 +87,7 @@
       <img src="uploads/bedside-icon.png" style="width:34px;height:34px;object-fit:contain;" alt="Bedside" />
     </button>
     <div style="flex:1;min-width:0;">
-      <div style="font-size:19px;font-weight:700;letter-spacing:-.015em;color:var(--text);">Bedside</div>
+      <div style="font-size:19px;font-weight:700;letter-spacing:-.015em;color:var(--text);">Nculator</div>
       <div style="font-size:11.5px;color:var(--muted);margin-top:1px;">{{ barSub }}</div>
     </div>
     <button onClick="{{ toggleTheme }}" style="flex:none;height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--border);background:var(--s2);display:flex;align-items:center;gap:7px;cursor:pointer;" style-hover="border-color:var(--primary);">
@@ -641,7 +641,7 @@
       <div style="width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px;"></div>
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
         <span style="{{ iconBadgeLgStyle }}"><img src="uploads/bedside-icon.png" style="width:46px;height:46px;object-fit:contain;" alt="Bedside" /></span>
-        <div><div style="font-size:17px;font-weight:700;color:var(--text);">Bedside</div><div style="font-size:12.5px;color:var(--muted);margin-top:1px;">Clinical calculators · v1.0</div></div>
+        <div><div style="font-size:17px;font-weight:700;color:var(--text);">Nculator</div><div style="font-size:12.5px;color:var(--muted);margin-top:1px;">Clinical calculators · v1.1</div></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:2px;">
         <button data-tab="settings" onClick="{{ setTabClose }}" style="display:flex;align-items:center;gap:13px;padding:14px 8px;background:transparent;border:none;cursor:pointer;font-size:15px;font-weight:500;color:var(--text);text-align:left;border-radius:13px;" style-hover="background:var(--s2);"><span class="ms" style="font-size:22px;color:var(--muted);">settings</span><span style="flex:1;">Settings &amp; appearance</span><span class="ms" style="font-size:20px;color:var(--muted);">chevron_right</span></button>
@@ -686,6 +686,13 @@ class Component extends DCLogic {
       if (Array.isArray(recents) && recents.length) s.recentTools = recents;
       if (Object.keys(s).length) this.setState(s);
     } catch(e) {}
+    this._setAppHeight = () => document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+    this._setAppHeight();
+    window.addEventListener('resize', this._setAppHeight);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._setAppHeight);
   }
 
   componentDidUpdate(pp, ps) {
@@ -1033,7 +1040,7 @@ class Component extends DCLogic {
     const rootStyle = { ...vars, minHeight:'100vh', background:isDark?'#000':'#dce1ec', display:'flex', justifyContent:'center', alignItems:'stretch', fontFamily:'Roboto,system-ui,sans-serif' };
     const iconBadgeStyle = { flex:'none', width:'44px', height:'44px', borderRadius:'13px', border:'1px solid var(--border)', background: isDark ? 'rgba(255,255,255,.92)' : 'var(--s2)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', padding:0, overflow:'hidden' };
     const iconBadgeLgStyle = { width:'58px', height:'58px', borderRadius:'18px', border:'1px solid var(--border)', background: isDark ? 'rgba(255,255,255,.92)' : 'var(--s2)', display:'flex', alignItems:'center', justifyContent:'center', flex:'none', overflow:'hidden' };
-    const appStyle = { width:'100%', maxWidth:'440px', height:'100vh', margin:'0 auto', position:'relative', display:'flex', flexDirection:'column', overflow:'hidden', background:'var(--bg)', color:'var(--text)', borderLeft:'1px solid var(--border)', borderRight:'1px solid var(--border)' };
+    const appStyle = { width:'100%', maxWidth:'440px', height:'var(--app-height,100vh)', margin:'0 auto', position:'relative', display:'flex', flexDirection:'column', overflow:'hidden', background:'var(--bg)', color:'var(--text)', borderLeft:'1px solid var(--border)', borderRight:'1px solid var(--border)' };
 
     const showTit = this.props.showTitration !== false;
     const TH = this.THEMES;

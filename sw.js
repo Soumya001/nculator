@@ -1,8 +1,10 @@
-const CACHE = 'nculator-v2';
+const CACHE = 'nculator-v3';
 const ASSETS = [
   '/',
   '/index.html',
   '/nculator.html',
+  '/Bedside%20Pro.dc.html',
+  '/support.js',
   '/manifest.json',
   '/uploads/bedside-icon.png'
 ];
