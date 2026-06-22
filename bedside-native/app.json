@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Bedside Pro",
-    "slug": "bedside-pro",
+    "name": "Nculater",
+    "slug": "nculater",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.bedsidepro.app",
+      "bundleIdentifier": "com.nculater.app",
       "buildNumber": "1"
     },
     "android": {
@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0a0a0d"
       },
-      "package": "com.bedsidepro.app",
+      "package": "com.nculater.app",
       "versionCode": 1
     },
     "plugins": [
