@@ -8,17 +8,30 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
       - name: Install EAS CLI
         run: npm install -g eas-cli
       - name: Install deps
         run: cd bedside-native && npm install --legacy-peer-deps
+      - name: Setup EAS project
+        run: cd bedside-native && bash setup-eas.sh
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        continue-on-error: true
       - name: Build APK
         run: cd bedside-native && eas build --platform android --profile preview --non-interactive --wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-      - name: List artifacts
-        run: cd bedside-native && eas build:list --platform android --status finished --limit 1 --non-interactive
+      - name: Download APK
+        run: |
+          URL=$(cd bedside-native && eas build:list --platform android --status finished --limit 1 --json --non-interactive 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['artifacts']['buildUrl'])" 2>/dev/null || echo '')
+          [ -n "$URL" ] && curl -L "$URL" -o nculater.apk && echo 'Downloaded APK'
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nculater-apk
+          path: nculater.apk
+          if-no-files-found: warn
+          retention-days: 90
