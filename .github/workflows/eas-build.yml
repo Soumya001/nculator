@@ -18,7 +18,6 @@ jobs:
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && (inputs.platform == 'android' || inputs.platform == 'all') || github.event_name == 'push' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,21 +39,44 @@ jobs:
         working-directory: bedside-native
         run: npm install
 
-      - name: Build Android APK
+      - name: Init EAS project (first run only)
         working-directory: bedside-native
-        run: eas build --platform android --profile preview --non-interactive --output ../nculater-android.apk
+        run: eas init --id $(eas project:info --json 2>/dev/null | jq -r '.id' || echo "") --non-interactive || eas init --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        continue-on-error: true
+
+      - name: Build Android APK
+        working-directory: bedside-native
+        run: eas build --platform android --profile preview --non-interactive --wait
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Get APK download URL
+        working-directory: bedside-native
+        run: |
+          URL=$(eas build:list --platform android --status finished --limit 1 --json --non-interactive | jq -r '.[0].artifacts.buildUrl')
+          echo "APK URL: $URL"
+          echo "APK_URL=$URL" >> $GITHUB_ENV
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Download and upload APK artifact
+        run: |
+          curl -L "$APK_URL" -o nculater-android.apk
+          echo "Downloaded APK"
+        continue-on-error: true
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: nculater-android-apk
           path: nculater-android.apk
-          retention-days: 30
+          retention-days: 90
+          if-no-files-found: warn
 
   build-ios:
-    name: Build iOS (simulator)
+    name: Build iOS
     runs-on: macos-latest
     if: ${{ github.event_name == 'workflow_dispatch' && (inputs.platform == 'ios' || inputs.platform == 'all') }}
     steps:
@@ -78,9 +100,16 @@ jobs:
         working-directory: bedside-native
         run: npm install
 
-      - name: Build iOS simulator
+      - name: Init EAS project
         working-directory: bedside-native
-        run: eas build --platform ios --profile preview --non-interactive
+        run: eas init --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        continue-on-error: true
+
+      - name: Build iOS
+        working-directory: bedside-native
+        run: eas build --platform ios --profile preview --non-interactive --wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -92,4 +121,6 @@ jobs:
         with:
           name: nculater-ios
           path: '*.ipa'
-          retention-days: 30
+          retention-days: 90
+          if-no-files-found: warn
+
