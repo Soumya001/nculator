@@ -1,90 +1,66 @@
-name: EAS Build — Android APK + iOS
+name: EAS Build Android
 
 on:
   workflow_dispatch:
     inputs:
       platform:
-        description: 'Platform to build'
+        description: Platform
         required: true
-        default: 'android'
+        default: android
         type: choice
-        options: [android, ios, all]
+        options: [android, ios]
 
 jobs:
-  build-android:
-    name: Build Android APK
+  android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node 18
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
-
-      - name: Install EAS CLI
-        run: npm install -g eas-cli@latest
-
-      - name: Install app dependencies
+          node-version: '18'
+      - run: npm install -g eas-cli
+      - run: npm install --legacy-peer-deps
         working-directory: bedside-native
-        run: npm install --legacy-peer-deps
-
-      - name: Get Expo account + create project
+      - name: Get account and create project
         working-directory: bedside-native
         run: |
-          # Get account username
-          ACCOUNT=$(eas whoami 2>/dev/null | tr -d '\n' || echo "")
-          echo "Expo account: $ACCOUNT"
-          
-          # Create project via Expo API and get project ID
-          RESP=$(curl -s -X POST https://api.expo.dev/graphql \
+          ACCOUNT=$(eas whoami 2>/dev/null | tr -d '\n')
+          echo "Account: $ACCOUNT"
+          RESP=$(curl -sf -X POST https://api.expo.dev/graphql \
             -H "Authorization: Bearer $EXPO_TOKEN" \
             -H "Content-Type: application/json" \
-            -d "{\"query\":\"mutation { app { createApp(appInput: { accountName: \\\"$ACCOUNT\\\", projectName: \\\"nculater\\\" }) { id } } }\"}")
-          echo "API response: $RESP"
-          
-          PROJECT_ID=$(echo "$RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('data',{}).get('app',{}).get('createApp',{}).get('id',''))" 2>/dev/null || echo "")
-          echo "Project ID: $PROJECT_ID"
-          
-          # Update app.json with project ID
-          if [ -n "$PROJECT_ID" ]; then
-            python3 - <<'PYEOF'
-import json, os
-pid = os.environ.get('PROJECT_ID', '')
-with open('app.json') as f:
-    data = json.load(f)
-data['expo']['extra'] = data['expo'].get('extra', {})
-data['expo']['extra']['eas'] = {'projectId': pid}
-with open('app.json', 'w') as f:
-    json.dump(data, f, indent=2)
-print('Updated app.json:', pid)
-PYEOF
+            -d "{\"query\":\"mutation { app { createApp(appInput: { accountName: \\"$ACCOUNT\\", projectName: \\"nculater\\" }) { id } } }\"}" || echo "{}")
+          echo "Resp: $RESP"
+          PID=$(echo "$RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('data',{}).get('app',{}).get('createApp',{}).get('id',''))" 2>/dev/null || echo "")
+          echo "ProjectID: $PID"
+          if [ -n "$PID" ]; then
+            python3 -c "
+import json,os
+with open('app.json') as f: d=json.load(f)
+d['expo'].setdefault('extra',{}).update({'eas':{'projectId':'$PID'}})
+with open('app.json','w') as f: json.dump(d,f,indent=2)
+print('app.json updated')
+"
           fi
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          PROJECT_ID: $PROJECT_ID
         continue-on-error: true
-
-      - name: Build Android APK
+      - name: EAS Build Android
         working-directory: bedside-native
         run: eas build --platform android --profile preview --non-interactive --wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Download APK from EAS
+      - name: Download APK
         working-directory: bedside-native
         run: |
-          URL=$(eas build:list --platform android --status finished --limit 1 --json --non-interactive 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0]['artifacts']['buildUrl'])" 2>/dev/null || echo "")
-          if [ -n "$URL" ]; then curl -L "$URL" -o ../nculater.apk && echo "✓ APK downloaded"; fi
+          URL=$(eas build:list --platform android --status finished --limit 1 --json --non-interactive 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)[0]['artifacts']['buildUrl'])" 2>/dev/null || echo "")
+          [ -n "$URL" ] && curl -L "$URL" -o ../nculater.apk && echo "Downloaded"
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         continue-on-error: true
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: nculater-android-apk
+          name: nculater-apk
           path: nculater.apk
-          retention-days: 90
           if-no-files-found: warn
+          retention-days: 90
