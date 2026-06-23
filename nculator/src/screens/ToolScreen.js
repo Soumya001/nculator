@@ -418,7 +418,7 @@ const styles = (theme) => StyleSheet.create({
   fieldLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' },
   fieldInputRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
   fieldInput: { flex: 1, fontSize: 28, fontWeight: '600', fontFamily: MONO, letterSpacing: -0.5, height: 40 },
-  fieldUnit: { fontSize: 14, fontWeight: '500' },
+  fieldUnit: { fontSize: 14, fontWeight: '500', flexShrink: 0 },
   dropTrigger: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 10 },
   dropTriggerText: { flex: 1, fontSize: 19, fontWeight: '600', fontFamily: MONO, letterSpacing: -0.3 },
   dropPanel: { borderTopWidth: 1 },

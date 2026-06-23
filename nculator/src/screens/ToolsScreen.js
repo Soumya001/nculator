@@ -3,13 +3,14 @@ import { View, Text, Animated, Easing, ScrollView, Pressable, TextInput, StyleSh
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { AppContext } from '../../App';
 import { TOOLS } from '../calculators';
 import TopBar from '../components/TopBar';
 
 export default function ToolsScreen({ navigation }) {
-  const { theme, addRecent } = useContext(AppContext);
+  const { theme, isDark, addRecent } = useContext(AppContext);
   const [query, setQuery] = useState('');
   const s = styles(theme);
 
@@ -59,21 +60,26 @@ export default function ToolsScreen({ navigation }) {
             )}
             {filtered.map((tool) => (
               <Pressable key={tool.id}
-                style={({ pressed }) => [s.row, { backgroundColor: theme.s2, borderColor: `rgba(${tool.rgb},0.25)`, borderBottomColor: `rgba(${tool.rgb},0.38)`, shadowColor: `rgba(${tool.rgb},0.3)` }, pressed && s.pressed]}
+                style={({ pressed }) => [s.row, { shadowColor: `rgba(${tool.rgb},0.4)` }, pressed && s.pressed]}
                 onPress={() => openTool(tool)}>
-                <View style={[s.rowIcon, { backgroundColor: `rgba(${tool.rgb},0.15)`, borderColor: `rgba(${tool.rgb},0.22)` }]}>
-                  <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
-                </View>
-                <View style={s.rowText}>
-                  <Text style={[s.rowName, { color: theme.text }]}>{tool.name}</Text>
-                  <Text style={[s.rowDesc, { color: theme.muted }]}>{tool.desc}</Text>
-                </View>
-                {tool.danger && (
-                  <View style={[s.dangerBadge, { backgroundColor: theme.dangerSoft }]}>
-                    <Text style={[s.dangerText, { color: theme.danger }]}>HIGH-RISK</Text>
+                <LinearGradient
+                  colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
+                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                  style={s.rowGradient}>
+                  <View style={[s.rowIcon, { backgroundColor: `rgba(${tool.rgb},0.15)` }]}>
+                    <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
                   </View>
-                )}
-                <MaterialCommunityIcons name="chevron-right" size={22} color={theme.muted} />
+                  <View style={s.rowText}>
+                    <Text style={[s.rowName, { color: theme.text }]}>{tool.name}</Text>
+                    <Text style={[s.rowDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                  </View>
+                  {tool.danger && (
+                    <View style={[s.dangerBadge, { backgroundColor: theme.dangerSoft }]}>
+                      <Text style={[s.dangerText, { color: theme.danger }]}>HIGH-RISK</Text>
+                    </View>
+                  )}
+                  <MaterialCommunityIcons name="chevron-right" size={20} color={theme.muted} />
+                </LinearGradient>
               </Pressable>
             ))}
           </View>
@@ -92,8 +98,9 @@ const styles = (theme) => StyleSheet.create({
   scroll: { flex: 1 },
   content: { padding: 16, paddingTop: 4, paddingBottom: 32 },
   list: { gap: 10 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 13, padding: 14, borderRadius: 20, borderWidth: 1, borderBottomWidth: 2.5, elevation: 3, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 10 },
-  rowIcon: { width: 42, height: 42, borderRadius: 13, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+  row: { borderRadius: 20, elevation: 6, shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.3, shadowRadius: 16, overflow: 'hidden' },
+  rowGradient: { flexDirection: 'row', alignItems: 'center', gap: 13, padding: 14, borderRadius: 20 },
+  rowIcon: { width: 42, height: 42, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
   rowText: { flex: 1 },
   rowName: { fontSize: 15, fontWeight: '700', letterSpacing: -0.1 },
   rowDesc: { fontSize: 12, marginTop: 2 },

@@ -3,6 +3,7 @@ import { View, Text, Animated, Easing, ScrollView, Pressable, TouchableOpacity, 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { AppContext } from '../../App';
 import { TOOLS } from '../calculators';
@@ -193,18 +194,23 @@ export default function HomeScreen({ navigation }) {
             {featured.map((tool) => (
               <View key={tool.id} style={{ position: 'relative' }}>
                 <Pressable
-                  style={({ pressed }) => [s.featCard, { backgroundColor: theme.s2, borderColor: `rgba(${tool.rgb},0.3)`, borderBottomColor: `rgba(${tool.rgb},0.42)`, shadowColor: `rgba(${tool.rgb},0.4)` }, pressed && !editing && s.pressed]}
+                  style={({ pressed }) => [s.featCard, { shadowColor: `rgba(${tool.rgb},0.5)` }, pressed && !editing && s.pressed]}
                   onPress={() => editing ? null : openTool(tool)}>
-                  <View style={[s.featIcon, { backgroundColor: `rgba(${tool.rgb},0.18)`, borderColor: `rgba(${tool.rgb},0.3)` }]}>
-                    <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
-                      <MaterialCommunityIcons name={tool.icon} size={22} color={tool.color} />
-                    </Animated.View>
-                  </View>
-                  <View style={s.featText}>
-                    <Text style={[s.featName, { color: theme.text }]}>{tool.name}</Text>
-                    <Text style={[s.featDesc, { color: theme.muted }]}>{tool.desc}</Text>
-                  </View>
-                  {!editing && <MaterialCommunityIcons name="chevron-right" size={22} color={theme.muted} />}
+                  <LinearGradient
+                    colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
+                    start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                    style={s.featGradient}>
+                    <View style={[s.featIcon, { backgroundColor: `rgba(${tool.rgb},0.18)` }]}>
+                      <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
+                        <MaterialCommunityIcons name={tool.icon} size={22} color={tool.color} />
+                      </Animated.View>
+                    </View>
+                    <View style={s.featText}>
+                      <Text style={[s.featName, { color: theme.text }]}>{tool.name}</Text>
+                      <Text style={[s.featDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                    </View>
+                    {!editing && <MaterialCommunityIcons name="chevron-right" size={22} color={tool.color} style={{ opacity: 0.7 }} />}
+                  </LinearGradient>
                 </Pressable>
                 {editing && (
                   <TouchableOpacity onPress={() => removePin(tool.id)} style={s.removeCircle}>
@@ -246,16 +252,21 @@ export default function HomeScreen({ navigation }) {
           <View style={s.grid}>
             {gridTools.map((tool) => (
               <Pressable key={tool.id}
-                style={({ pressed }) => [s.gridCard, { backgroundColor: theme.s2, borderColor: `rgba(${tool.rgb},0.2)`, borderBottomColor: `rgba(${tool.rgb},0.35)`, shadowColor: `rgba(${tool.rgb},0.3)` }, pressed && s.pressedGrid]}
+                style={({ pressed }) => [s.gridCard, { shadowColor: `rgba(${tool.rgb},0.4)` }, pressed && s.pressedGrid]}
                 onPress={() => openTool(tool)}>
-                <View style={[s.dotPip, { backgroundColor: tool.color }]} />
-                <View style={[s.gridIconWrap, { backgroundColor: `rgba(${tool.rgb},0.16)`, borderColor: `rgba(${tool.rgb},0.25)` }]}>
-                  <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
-                    <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
-                  </Animated.View>
-                </View>
-                <Text style={[s.gridName, { color: theme.text }]}>{tool.name}</Text>
-                <Text style={[s.gridDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                <LinearGradient
+                  colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
+                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                  style={s.gridGradient}>
+                  <View style={[s.dotPip, { backgroundColor: tool.color }]} />
+                  <View style={[s.gridIconWrap, { backgroundColor: `rgba(${tool.rgb},0.16)` }]}>
+                    <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
+                      <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
+                    </Animated.View>
+                  </View>
+                  <Text style={[s.gridName, { color: theme.text }]}>{tool.name}</Text>
+                  <Text style={[s.gridDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                </LinearGradient>
               </Pressable>
             ))}
           </View>
@@ -288,8 +299,9 @@ const styles = (theme) => StyleSheet.create({
   tuneBtn: { width: 34, height: 34, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
   doneText: { fontSize: 13, fontWeight: '700', paddingVertical: 5, paddingHorizontal: 2 },
   featuredList: { gap: 9 },
-  featCard: { flexDirection: 'row', alignItems: 'center', gap: 16, padding: 19, borderRadius: 20, borderWidth: 1, borderBottomWidth: 2.5, elevation: 4, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 12 },
-  featIcon: { width: 52, height: 52, borderRadius: 17, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+  featCard: { borderRadius: 20, elevation: 8, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 20, overflow: 'hidden' },
+  featGradient: { flexDirection: 'row', alignItems: 'center', gap: 16, padding: 19, borderRadius: 20 },
+  featIcon: { width: 52, height: 52, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
   featText: { flex: 1 },
   featName: { fontSize: 16, fontWeight: '700', letterSpacing: -0.2 },
   featDesc: { fontSize: 12, marginTop: 3 },
@@ -297,9 +309,10 @@ const styles = (theme) => StyleSheet.create({
   dividerLine: { flex: 1, height: 1 },
   dividerText: { fontSize: 10, fontWeight: '700', letterSpacing: 1.4, textTransform: 'uppercase', opacity: 0.45 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  gridCard: { width: '47.5%', padding: 17, borderRadius: 20, borderWidth: 1, borderBottomWidth: 2.5, elevation: 3, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 10, position: 'relative', overflow: 'hidden' },
+  gridCard: { width: '47.5%', borderRadius: 20, elevation: 6, shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.3, shadowRadius: 16, overflow: 'hidden' },
+  gridGradient: { padding: 17, borderRadius: 20, position: 'relative' },
   dotPip: { position: 'absolute', top: 15, right: 15, width: 7, height: 7, borderRadius: 3.5 },
-  gridIconWrap: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+  gridIconWrap: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   gridName: { fontSize: 14, fontWeight: '700', marginTop: 11, letterSpacing: -0.1 },
   gridDesc: { fontSize: 11, marginTop: 3, lineHeight: 15 },
   safetyNote: { marginTop: 20, padding: 16, borderRadius: 18, borderWidth: 1, flexDirection: 'row', alignItems: 'flex-start' },
