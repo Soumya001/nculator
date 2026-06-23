@@ -83,7 +83,7 @@ export default function ToolsScreen({ navigation }) {
                   colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
                   start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                   style={s.rowGradient}>
-                  <View style={[s.rowIcon, { backgroundColor: `rgba(${tool.rgb},0.15)` }]}>
+                  <View style={[s.rowIcon, { backgroundColor: `rgba(${tool.rgb},0.15)`, ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${tool.rgb},.22), 0 3px 12px rgba(${tool.rgb},.2), inset 0 1px 0 rgba(255,255,255,.1)` } : {}) }]}>
                     <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
                   </View>
                   <View style={s.rowText}>

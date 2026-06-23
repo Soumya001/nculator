@@ -227,7 +227,7 @@ export default function HomeScreen({ navigation }) {
                     colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                     style={s.featGradient}>
-                    <View style={[s.featIcon, { backgroundColor: `rgba(${tool.rgb},0.18)` }]}>
+                    <View style={[s.featIcon, { backgroundColor: `rgba(${tool.rgb},0.18)`, ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${tool.rgb},.3), 0 4px 18px rgba(${tool.rgb},.28), inset 0 1px 0 rgba(255,255,255,.15)` } : {}) }]}>
                       <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
                         <MaterialCommunityIcons name={tool.icon} size={22} color={tool.color} />
                       </Animated.View>
@@ -257,7 +257,7 @@ export default function HomeScreen({ navigation }) {
                 <View style={s.addChips}>
                   {addable.map(tool => (
                     <TouchableOpacity key={tool.id} onPress={() => addPin(tool.id)}
-                      style={[s.addChip, { backgroundColor: `rgba(${tool.rgb},0.12)`, borderColor: `rgba(${tool.rgb},0.22)` }]}
+                      style={[s.addChip, { backgroundColor: `rgba(${tool.rgb},0.12)`, ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${tool.rgb},.22), 0 2px 0 rgba(0,0,0,.4)`, border: 'none' } : { borderColor: `rgba(${tool.rgb},0.22)` }) }]}
                       activeOpacity={0.7}>
                       <MaterialCommunityIcons name={tool.icon} size={17} color={tool.color} />
                       <Text style={[s.addChipText, { color: theme.text }]}>{tool.name}</Text>
@@ -285,8 +285,8 @@ export default function HomeScreen({ navigation }) {
                   colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
                   start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                   style={s.gridGradient}>
-                  <View style={[s.dotPip, { backgroundColor: tool.color }]} />
-                  <View style={[s.gridIconWrap, { backgroundColor: `rgba(${tool.rgb},0.16)` }]}>
+                  <View style={[s.dotPip, { backgroundColor: tool.color, ...(Platform.OS === 'web' ? { boxShadow: `0 0 10px ${tool.color}, 0 0 20px rgba(${tool.rgb},.4)` } : {}) }]} />
+                  <View style={[s.gridIconWrap, { backgroundColor: `rgba(${tool.rgb},0.16)`, ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${tool.rgb},.25), 0 4px 14px rgba(${tool.rgb},.22), inset 0 1px 0 rgba(255,255,255,.12)` } : {}) }]}>
                     <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
                       <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
                     </Animated.View>
