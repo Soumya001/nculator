@@ -36,6 +36,16 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
+      - name: Stamp build number
+        if: inputs.platform == 'android'
+        run: |
+          echo "export const BUILD_NUMBER = ${{ github.run_number }};" > nculator/src/buildNumber.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add nculator/src/buildNumber.js
+          git commit -m "chore: set build number ${{ github.run_number }} [skip ci]"
+          git push origin HEAD:main
+
       - name: Build with EAS
         id: build
         working-directory: nculator
