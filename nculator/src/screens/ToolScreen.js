@@ -71,10 +71,11 @@ export default function ToolScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={[s.safe, { backgroundColor: theme.bg }]}>
-      <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <View style={{ flex: 1 }}>
 
-        {/* CENTERED HERO HEADER */}
-        <View style={s.heroWrap}>
+        <ScrollView style={s.scroll} contentContainerStyle={s.content} keyboardShouldPersistTaps="always" showsVerticalScrollIndicator={false}>
+
+          {/* CENTERED HERO HEADER */}
           <LinearGradient
             colors={[`rgba(${accentRgb},0.26)`, 'transparent']}
             start={{ x: 0.5, y: 0 }} end={{ x: 0.5, y: 1 }}
@@ -96,9 +97,6 @@ export default function ToolScreen({ route, navigation }) {
               <Text style={[s.toolName, { color: theme.text }]}>{tool.name}</Text>
             </View>
           </LinearGradient>
-        </View>
-
-        <ScrollView style={s.scroll} contentContainerStyle={s.content} keyboardShouldPersistTaps="always" showsVerticalScrollIndicator={false}>
 
           {/* OXYGEN: SPO2 REFERENCE GRID */}
           {isOxygen && (
@@ -404,7 +402,7 @@ export default function ToolScreen({ route, navigation }) {
 
 const styles = (theme) => StyleSheet.create({
   safe: { flex: 1 },
-  heroWrap: { flexShrink: 0, flexGrow: 0 },
+  heroWrap: { },
   heroGradient: { paddingBottom: 4, overflow: 'hidden' },
   heroBackRow: { flexDirection: 'row', paddingHorizontal: 14, paddingTop: 6, paddingBottom: 8 },
   backBtn: { width: 42, height: 42, borderRadius: 21, backgroundColor: 'rgba(255,255,255,0.09)', alignItems: 'center', justifyContent: 'center' },
