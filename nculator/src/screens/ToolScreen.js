@@ -403,7 +403,7 @@ export default function ToolScreen({ route, navigation }) {
 }
 
 const styles = (theme) => StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, ...(Platform.OS === 'web' ? { height: '100vh', overflow: 'hidden' } : {}) },
   heroWrap: { flexShrink: 0 },
   heroGradient: { paddingBottom: 4 },
   heroBackRow: { flexDirection: 'row', paddingHorizontal: 14, paddingTop: 6, paddingBottom: 8 },
@@ -412,7 +412,7 @@ const styles = (theme) => StyleSheet.create({
   iconBadge: { width: 72, height: 72, borderRadius: 22, overflow: 'hidden' },
   iconBadgeGrad: { width: 72, height: 72, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   toolName: { fontSize: 23, fontWeight: '700', letterSpacing: -0.3, marginTop: 14, textAlign: 'center' },
-  scroll: { flex: 1 },
+  scroll: { flex: 1, ...(Platform.OS === 'web' ? { overflow: 'auto' } : {}) },
   content: { padding: 16, paddingBottom: 24 },
   banner: { flexDirection: 'row', gap: 11, padding: 14, borderRadius: 16, borderWidth: 1, marginBottom: 16, alignItems: 'flex-start' },
   bannerEmoji: { fontSize: 18 },

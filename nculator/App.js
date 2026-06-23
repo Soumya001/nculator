@@ -114,6 +114,14 @@ export default function App() {
   const [pinnedTools, setPinnedTools] = useState(null);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      const style = document.createElement('style');
+      style.textContent = 'input:focus,textarea:focus{outline:none!important;box-shadow:none!important;}input,textarea{caret-color:var(--tc,#4c8dff);caret-shape:bar;}';
+      document.head.appendChild(style);
+    }
+  }, []);
+
+  useEffect(() => {
     AsyncStorage.multiGet(['bs_theme', 'bs_accent', 'bs_recents', 'bs_pins']).then(pairs => {
       const obj = Object.fromEntries(pairs.map(([k, v]) => [k, v]));
       if (obj.bs_theme) setIsDark(obj.bs_theme === 'dark');
