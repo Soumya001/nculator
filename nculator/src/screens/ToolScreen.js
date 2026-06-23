@@ -231,14 +231,14 @@ export default function ToolScreen({ route, navigation }) {
                     <Text style={[s.bigNum, { color: theme.text }]}>{result.total}</Text>
                     <Text style={[s.bigUnit, { color: theme.muted }]}> {result.unit}</Text>
                   </View>
-                  <Text style={[s.workingText, { color: theme.muted }]}>{result.totalWorking}</Text>
+                  <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.totalWorking}</Text>
                   <View style={[s.divLine, { backgroundColor: theme.border }]} />
                   <Text style={[s.resultLabel, { color: accentColor }]}>Per dose</Text>
                   <View style={s.resultRow}>
                     <Text style={[s.bigNum, { color: theme.text }]}>{result.per}</Text>
                     <Text style={[s.bigUnit, { color: theme.muted }]}> {result.unit}</Text>
                   </View>
-                  <Text style={[s.workingText, { color: theme.muted }]}>{result.perWorking}</Text>
+                  <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.perWorking}</Text>
                 </View>
               )}
 
@@ -277,14 +277,14 @@ export default function ToolScreen({ route, navigation }) {
                     <Text style={[s.bigNum, { fontSize: 36, color: theme.text }]}>{result.conc}</Text>
                     <Text style={[s.bigUnit, { color: theme.muted }]}> {result.concUnit}</Text>
                   </View>
-                  <Text style={[s.workingText, { color: theme.muted }]}>{result.concWorking}</Text>
+                  <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.concWorking}</Text>
                   <View style={[s.divLine, { backgroundColor: theme.border }]} />
                   <Text style={[s.resultLabel, { color: accentColor }]}>Pump rate</Text>
                   <View style={s.resultRow}>
                     <Text style={[s.bigNum, { color: theme.text }]}>{result.rate}</Text>
                     <Text style={[s.bigUnit, { color: theme.muted }]}> {result.rateUnit}</Text>
                   </View>
-                  <Text style={[s.workingText, { color: theme.muted }]}>{result.rateWorking}</Text>
+                  <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.rateWorking}</Text>
                   {/* Double-check */}
                   <View style={[s.divLine, { backgroundColor: `rgba(${accentRgb},0.3)`, borderStyle: 'dashed' }]} />
                   <Text style={[s.checkTitle, { color: theme.text }]}>Independent double-check</Text>
@@ -307,7 +307,7 @@ export default function ToolScreen({ route, navigation }) {
                     <Text style={[s.bigNum, { color: theme.text }]}>{result.conc}</Text>
                     <Text style={[s.bigUnit, { color: theme.muted }]}> {result.concUnit}</Text>
                   </View>
-                  <Text style={[s.workingText, { color: theme.muted }]}>{result.concWorking}</Text>
+                  <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.concWorking}</Text>
                   {result.volToDraw && (<>
                     <View style={[s.divLine, { backgroundColor: theme.border }]} />
                     <Text style={[s.resultLabel, { color: accentColor }]}>Volume to draw</Text>
@@ -315,7 +315,7 @@ export default function ToolScreen({ route, navigation }) {
                       <Text style={[s.bigNum, { color: theme.text }]}>{result.volToDraw}</Text>
                       <Text style={[s.bigUnit, { color: theme.muted }]}> mL</Text>
                     </View>
-                    <Text style={[s.workingText, { color: theme.muted }]}>{result.drawWorking}</Text>
+                    <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.drawWorking}</Text>
                   </>)}
                 </View>
               )}
@@ -329,7 +329,7 @@ export default function ToolScreen({ route, navigation }) {
                     <Text style={[s.bigUnit, { color: theme.muted }]}> {result.unit}</Text>
                   </View>
                   {result.sub ? <Text style={[s.subText, { color: theme.muted }]}>{result.sub}</Text> : null}
-                  {result.working ? <Text style={[s.workingText, { color: theme.muted }]}>{result.working}</Text> : null}
+                  {result.working ? <Text style={[s.workingText, { color: theme.muted, backgroundColor: theme.s2 }]}>{result.working}</Text> : null}
                   {/* Drip spot-check */}
                   {result.spotChecks && (
                     <View style={s.spotChecks}>
@@ -427,13 +427,13 @@ const styles = (theme) => StyleSheet.create({
   errCard: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 16, borderWidth: 1, alignItems: 'flex-start', marginBottom: 14 },
   errEmoji: { fontSize: 18 },
   errText: { flex: 1, fontSize: 13, fontWeight: '500', lineHeight: 19 },
-  resultCard: { borderRadius: 22, borderWidth: 1, padding: 22, marginBottom: 14, shadowOffset: { width: 0, height: 8 } },
+  resultCard: { borderRadius: 22, borderWidth: 1, paddingVertical: 24, paddingHorizontal: 20, marginBottom: 14, shadowOffset: { width: 0, height: 8 } },
   resultLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 6 },
   resultRow: { flexDirection: 'row', alignItems: 'baseline' },
   bigNum: { fontSize: 52, fontWeight: '700', fontFamily: MONO, letterSpacing: -1, lineHeight: 60 },
   bigUnit: { fontSize: 18, fontWeight: '400' },
   subText: { fontSize: 14, fontFamily: MONO, marginTop: 6 },
-  workingText: { fontSize: 12.5, fontFamily: MONO, marginTop: 13, padding: 12, backgroundColor: 'rgba(128,128,128,0.08)', borderRadius: 12, lineHeight: 18, overflow: 'hidden' },
+  workingText: { fontSize: 12.5, fontFamily: MONO, marginTop: 13, padding: 12, borderRadius: 12, lineHeight: 18, overflow: 'hidden' },
   divLine: { height: 1, marginVertical: 18 },
   statusText: { fontSize: 26, fontWeight: '700', fontFamily: MONO, marginTop: 8 },
   statusTarget: { fontSize: 12, marginTop: 4, marginBottom: 12 },
