@@ -87,8 +87,8 @@ export default function ToolsScreen({ navigation }) {
                     <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
                   </View>
                   <View style={s.rowText}>
-                    <Text style={[s.rowName, { color: theme.text }]}>{tool.name}</Text>
-                    <Text style={[s.rowDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                    <Text style={[s.rowName, { color: theme.text }]} numberOfLines={1}>{tool.name}</Text>
+                    <Text style={[s.rowDesc, { color: theme.muted }]} numberOfLines={1}>{tool.desc}</Text>
                   </View>
                   {tool.danger && (
                     <View style={[s.dangerBadge, { backgroundColor: theme.dangerSoft }]}>

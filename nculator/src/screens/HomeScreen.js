@@ -233,8 +233,8 @@ export default function HomeScreen({ navigation }) {
                       </Animated.View>
                     </View>
                     <View style={s.featText}>
-                      <Text style={[s.featName, { color: theme.text }]}>{tool.name}</Text>
-                      <Text style={[s.featDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                      <Text style={[s.featName, { color: theme.text }]} numberOfLines={1}>{tool.name}</Text>
+                      <Text style={[s.featDesc, { color: theme.muted }]} numberOfLines={1}>{tool.desc}</Text>
                     </View>
                     {!editing && <MaterialCommunityIcons name="chevron-right" size={22} color={tool.color} style={{ opacity: 0.7 }} />}
                   </LinearGradient>
@@ -291,8 +291,8 @@ export default function HomeScreen({ navigation }) {
                       <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
                     </Animated.View>
                   </View>
-                  <Text style={[s.gridName, { color: theme.text }]}>{tool.name}</Text>
-                  <Text style={[s.gridDesc, { color: theme.muted }]}>{tool.desc}</Text>
+                  <Text style={[s.gridName, { color: theme.text }]} numberOfLines={1}>{tool.name}</Text>
+                  <Text style={[s.gridDesc, { color: theme.muted }]} numberOfLines={2}>{tool.desc}</Text>
                 </LinearGradient>
               </Pressable>
             ))}
