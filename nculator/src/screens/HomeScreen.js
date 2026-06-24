@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useRef, useCallback, useState } from 'react';
-import { View, Text, Animated, Easing, ScrollView, Pressable, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, Text, Animated, Easing, ScrollView, Pressable, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -221,13 +221,13 @@ export default function HomeScreen({ navigation }) {
             {featured.map((tool) => (
               <View key={tool.id} style={{ position: 'relative' }}>
                 <Pressable
-                  style={({ pressed }) => [s.featCard, { shadowColor: `rgba(${tool.rgb},0.5)`, borderBottomColor: `rgba(${tool.rgb},0.42)`, ...card3dShadow(tool.rgb, isDark, tool.danger) }, pressed && !editing && s.pressed]}
+                  style={({ pressed }) => [s.featCard, { borderColor: `rgba(${tool.rgb},0.3)`, shadowColor: `rgba(${tool.rgb},0.5)`, ...card3dShadow(tool.rgb, isDark, tool.danger) }, pressed && !editing && s.pressed]}
                   onPress={() => editing ? null : openTool(tool)}>
                   <LinearGradient
                     colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                     style={s.featGradient}>
-                    <View style={[s.featIcon, { backgroundColor: `rgba(${tool.rgb},0.18)`, ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${tool.rgb},.3), 0 4px 18px rgba(${tool.rgb},.28), inset 0 1px 0 rgba(255,255,255,.15)` } : {}) }]}>
+                    <View style={[s.featIcon, { backgroundColor: `rgba(${tool.rgb},0.18)` }]}>
                       <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
                         <MaterialCommunityIcons name={tool.icon} size={22} color={tool.color} />
                       </Animated.View>
@@ -279,14 +279,14 @@ export default function HomeScreen({ navigation }) {
           <View style={s.grid}>
             {gridTools.map((tool) => (
               <Pressable key={tool.id}
-                style={({ pressed }) => [s.gridCard, { shadowColor: `rgba(${tool.rgb},0.4)`, borderBottomColor: `rgba(${tool.rgb},0.42)`, ...card3dShadow(tool.rgb, isDark, tool.danger) }, pressed && s.pressedGrid]}
+                style={({ pressed }) => [s.gridCard, { borderColor: `rgba(${tool.rgb},0.2)`, shadowColor: `rgba(${tool.rgb},0.4)`, ...card3dShadow(tool.rgb, isDark, tool.danger) }, pressed && s.pressedGrid]}
                 onPress={() => openTool(tool)}>
                 <LinearGradient
                   colors={isDark ? [`rgba(${tool.rgb},0.22)`, '#1a1b22', '#14151b'] : [`rgba(${tool.rgb},0.12)`, '#ffffff', '#ffffff']}
                   start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                   style={s.gridGradient}>
-                  <View style={[s.dotPip, { backgroundColor: tool.color, ...(Platform.OS === 'web' ? { boxShadow: `0 0 10px ${tool.color}, 0 0 20px rgba(${tool.rgb},.4)` } : {}) }]} />
-                  <View style={[s.gridIconWrap, { backgroundColor: `rgba(${tool.rgb},0.16)`, ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${tool.rgb},.25), 0 4px 14px rgba(${tool.rgb},.22), inset 0 1px 0 rgba(255,255,255,.12)` } : {}) }]}>
+                  <View style={[s.dotPip, { backgroundColor: tool.color }]} />
+                  <View style={[s.gridIconWrap, { backgroundColor: `rgba(${tool.rgb},0.16)` }]}>
                     <Animated.View style={getIconStyle(tool.id, iconProgress[tool.id])}>
                       <MaterialCommunityIcons name={tool.icon} size={20} color={tool.color} />
                     </Animated.View>
@@ -326,7 +326,7 @@ const styles = (theme) => StyleSheet.create({
   tuneBtn: { width: 34, height: 34, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
   doneText: { fontSize: 13, fontWeight: '700', paddingVertical: 5, paddingHorizontal: 2 },
   featuredList: { gap: 9 },
-  featCard: { borderRadius: 20, overflow: 'hidden', ...Platform.select({ web: {}, default: { elevation: 8, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 20 } }) },
+  featCard: { borderRadius: 20, overflow: 'hidden', borderWidth: 1, ...Platform.select({ web: {}, default: { elevation: 6, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 14 } }) },
   featGradient: { flexDirection: 'row', alignItems: 'center', gap: 16, padding: 19 },
   featIcon: { width: 52, height: 52, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
   featText: { flex: 1 },
@@ -336,8 +336,8 @@ const styles = (theme) => StyleSheet.create({
   dividerLine: { flex: 1, height: 1 },
   dividerText: { fontSize: 10, fontWeight: '700', letterSpacing: 1.4, textTransform: 'uppercase', opacity: 0.45 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
-  gridCard: { width: (Dimensions.get('window').width - 32 - 9) / 2, borderRadius: 20, overflow: 'hidden', ...Platform.select({ web: {}, default: { elevation: 6, shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.3, shadowRadius: 16 } }) },
-  gridGradient: { padding: 17, paddingBottom: 20, borderRadius: 20, position: 'relative', minHeight: 140 },
+  gridCard: { width: '48%', borderRadius: 20, overflow: 'hidden', borderWidth: 1, ...Platform.select({ web: {}, default: { elevation: 5, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 12 } }) },
+  gridGradient: { padding: 17, paddingBottom: 20, position: 'relative' },
   dotPip: { position: 'absolute', top: 15, right: 15, width: 7, height: 7, borderRadius: 3.5 },
   gridIconWrap: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   gridName: { fontSize: 14, fontWeight: '700', marginTop: 11, letterSpacing: -0.1 },
