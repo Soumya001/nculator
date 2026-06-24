@@ -10,7 +10,6 @@ on:
         type: choice
         options:
           - android
-          - ios
 
 permissions:
   contents: write
@@ -25,19 +24,15 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli@latest
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Install deps
         run: cd nculator && npm install --legacy-peer-deps
 
-      - name: Authenticate with EAS
-        run: cd nculator && eas whoami
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
       - name: Stamp build number
-        if: inputs.platform == 'android'
         run: |
           echo "export const BUILD_NUMBER = ${{ github.run_number }};" > nculator/src/buildNumber.js
           git config user.name "github-actions[bot]"
@@ -46,71 +41,36 @@ jobs:
           git commit -m "chore: set build number ${{ github.run_number }} [skip ci]"
           git push origin HEAD:main
 
-      - name: Build with EAS
-        id: build
-        working-directory: nculator
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: Generate native project
+        run: cd nculator && npx expo prebuild --platform android --clean
+
+      - name: Build APK
         run: |
-          set -u
-          OUTPUT=$(eas build \
-            --platform ${{ inputs.platform }} \
-            --profile preview \
-            --non-interactive \
-            --wait 2>&1) || { echo "$OUTPUT"; echo "::error::EAS build failed — see output above"; exit 1; }
-          echo "$OUTPUT"
+          cd nculator/android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
 
-          # Extract build UUID from the "See logs:" line
-          BUILD_ID=$(echo "$OUTPUT" | grep -oE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | head -1 || true)
-          echo "Build ID: $BUILD_ID"
-
-          # Query EAS GraphQL for the artifact download URL
-          RESPONSE=$(curl -s -X POST https://api.expo.dev/graphql \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.EXPO_TOKEN }}" \
-            -d "{\"query\":\"{ builds { byId(buildId: \\\"$BUILD_ID\\\") { artifacts { applicationArchiveUrl } } } }\"}")
-          echo "GraphQL response: $RESPONSE"
-
-          ARTIFACT_URL=$(echo "$RESPONSE" | \
-            node -e "let d=''; process.stdin.on('data',c=>d+=c).on('end',()=>{ try{ const r=JSON.parse(d); console.log(r.data.builds.byId.artifacts.applicationArchiveUrl||''); }catch(e){console.log('');} })")
-
-          echo "artifact_url=$ARTIFACT_URL" >> $GITHUB_OUTPUT
-          echo "Artifact URL: $ARTIFACT_URL"
-          [ -n "$ARTIFACT_URL" ] || { echo "::error::Could not extract artifact URL from GraphQL response"; exit 1; }
-
-      - name: Set platform metadata
-        id: meta
+      - name: Find APK
+        id: apk
         run: |
-          if [ "${{ inputs.platform }}" = "ios" ]; then
-            echo "ext=ipa"        >> $GITHUB_OUTPUT
-            echo "label=iOS IPA"  >> $GITHUB_OUTPUT
-          else
-            echo "ext=apk"           >> $GITHUB_OUTPUT
-            echo "label=Android APK" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Download artifact
-        run: |
-          ARTIFACT_URL="${{ steps.build.outputs.artifact_url }}"
-          EXT="${{ steps.meta.outputs.ext }}"
-          echo "Downloading from: $ARTIFACT_URL"
-          curl -fL "$ARTIFACT_URL" -o "nculator-preview.$EXT"
-          ls -lh "nculator-preview.$EXT"
+          APK_PATH=$(find nculator/android/app/build/outputs/apk -name "*.apk" | head -1)
+          echo "path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "Found APK: $APK_PATH"
+          ls -lh "$APK_PATH"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.platform }}-v${{ github.run_number }}
-          name: "Nculator ${{ steps.meta.outputs.label }} v${{ github.run_number }}"
+          tag_name: android-v${{ github.run_number }}
+          name: "Nculator Android APK v${{ github.run_number }}"
           body: |
-            **${{ steps.meta.outputs.label }}** built automatically by EAS Build.
+            **Android APK** built directly with Gradle (no EAS).
 
             Download the file below and install it on your device.
 
-            > **Android:** enable "Install from unknown sources" then open the `.apk`
-            > **iOS:** requires your device UDID to be registered — install via AltStore or Apple Configurator
+            > Enable "Install from unknown sources" then open the `.apk`
 
             Built from commit ${{ github.sha }}
-          files: nculator-preview.${{ steps.meta.outputs.ext }}
+          files: ${{ steps.apk.outputs.path }}
           draft: false
           prerelease: false
