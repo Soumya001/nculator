@@ -293,8 +293,8 @@ export default function HomeScreen({ navigation }) {
           </View>
 
           {/* SAFETY NOTE */}
-          <View style={[s.safetyNote, { backgroundColor: 'rgba(76,141,255,0.06)', borderColor: 'rgba(76,141,255,0.12)' }]}>
-            <MaterialCommunityIcons name="shield-check-outline" size={20} color="rgba(76,141,255,0.8)" style={{ marginTop: 1, marginRight: 12, flexShrink: 0 }} />
+          <View style={[s.safetyNote, { backgroundColor: theme.primarySoft, borderColor: theme.border }]}>
+            <MaterialCommunityIcons name="shield-check-outline" size={20} color={theme.accent} style={{ marginTop: 1, marginRight: 12, flexShrink: 0 }} />
             <Text style={[s.safetyText, { color: theme.muted }]}>Every result shows its working so you can verify it. Does not replace the order or local protocol. <Text style={{ color: theme.text, fontWeight: '700' }}>The nurse is the final safety check.</Text></Text>
           </View>
 

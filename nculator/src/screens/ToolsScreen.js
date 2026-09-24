@@ -47,7 +47,7 @@ export default function ToolsScreen({ navigation }) {
           <TextInput style={[s.searchInput, { color: theme.text }]} value={query} onChangeText={setQuery}
             placeholder="Search calculators" placeholderTextColor={theme.muted} autoCorrect={false} returnKeyType="search" />
           {query.length > 0 && (
-            <Pressable onPress={() => setQuery('')}>
+            <Pressable onPress={() => setQuery('')} hitSlop={10} accessibilityRole="button" accessibilityLabel="Clear search">
               <MaterialCommunityIcons name="close-circle" size={18} color={theme.muted} />
             </Pressable>
           )}
@@ -56,7 +56,13 @@ export default function ToolsScreen({ navigation }) {
         <ScrollView style={s.scroll} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <View style={s.list}>
             {filtered.length === 0 && query.length > 0 && (
-              <Text style={[s.noResults, { color: theme.muted }]}>No match for "{query}"</Text>
+              <View style={s.noResults}>
+                <MaterialCommunityIcons name="magnify-close" size={34} color={theme.muted} style={{ opacity: 0.6 }} />
+                <Text style={[s.noResultsText, { color: theme.muted }]}>No match for "{query}"</Text>
+                <Pressable onPress={() => setQuery('')} style={[s.noResultsBtn, { backgroundColor: theme.s2, borderColor: theme.border }]}>
+                  <Text style={[s.noResultsBtnText, { color: theme.text }]}>Clear search</Text>
+                </Pressable>
+              </View>
             )}
             {filtered.map((tool) => (
               <Pressable key={tool.id}
@@ -123,5 +129,8 @@ const styles = (theme) => StyleSheet.create({
   rowDesc: { fontSize: 12, marginTop: 2 },
   dangerBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 7 },
   dangerText: { fontSize: 10, fontWeight: '700', letterSpacing: 0.5 },
-  noResults: { textAlign: 'center', paddingVertical: 40, fontSize: 14 },
+  noResults: { alignItems: 'center', gap: 10, paddingVertical: 40 },
+  noResultsText: { fontSize: 14 },
+  noResultsBtn: { marginTop: 4, paddingHorizontal: 16, paddingVertical: 9, borderRadius: 12, borderWidth: 1 },
+  noResultsBtnText: { fontSize: 13, fontWeight: '600' },
 });

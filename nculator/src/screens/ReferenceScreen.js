@@ -13,9 +13,11 @@ const SECTION = ({ label, danger, children, theme }) => (
   </View>
 );
 
-const Row = ({ icon, title, body, theme }) => (
+const Row = ({ icon, title, body, theme, color }) => (
   <View style={styles.row}>
-    <Text style={styles.rowIcon}>{icon}</Text>
+    <View style={[styles.rowIconWrap, { backgroundColor: theme.s2 }]}>
+      <MaterialCommunityIcons name={icon} size={17} color={color || theme.muted} />
+    </View>
     <View style={{ flex: 1 }}>
       {title && <Text style={[styles.rowTitle, { color: theme.text }]}>{title}</Text>}
       <Text style={[styles.rowBody, { color: theme.muted }]}>{body}</Text>
@@ -27,8 +29,8 @@ const Divider = ({ theme }) => <View style={[styles.div, { backgroundColor: them
 
 const Step = ({ n, text, theme }) => (
   <View style={styles.step}>
-    <View style={[styles.stepNum, { backgroundColor: `rgba(76,141,255,0.12)` }]}>
-      <Text style={[styles.stepNumText, { color: '#4c8dff' }]}>{n}</Text>
+    <View style={[styles.stepNum, { backgroundColor: theme.s2, borderColor: theme.border }]}>
+      <Text style={[styles.stepNumText, { color: theme.accent }]}>{n}</Text>
     </View>
     <Text style={[styles.stepText, { color: theme.text }]}>{text}</Text>
   </View>
@@ -77,21 +79,21 @@ export default function ReferenceScreen() {
             ].map((t, i) => (
               <View key={i}>
                 {i > 0 && <Divider theme={theme} />}
-                <Row icon="🚫" body={t} theme={theme} />
+                <Row icon="close-octagon-outline" color={theme.danger} body={t} theme={theme} />
               </View>
             ))}
           </SECTION>
 
           <SECTION label="LEGAL & ETHICAL" theme={theme}>
-            <Row icon="⚖️" title="Not a certified medical device." body="This app is a mathematical aid. It has not been validated or approved under CE, FDA, TGA, or any other regulatory framework." theme={theme} />
+            <Row icon="scale-balance" title="Not a certified medical device." body="This app is a mathematical aid. It has not been validated or approved under CE, FDA, TGA, or any other regulatory framework." theme={theme} />
             <Divider theme={theme} />
-            <Row icon="📋" title="The prescriber's order is the authority." body="A result that differs from the order means query the order — not that the order is wrong." theme={theme} />
+            <Row icon="clipboard-text-outline" title="The prescriber's order is the authority." body="A result that differs from the order means query the order — not that the order is wrong." theme={theme} />
             <Divider theme={theme} />
-            <Row icon="🏛" title="Professional accountability stays with the clinician." body="Using this app does not transfer or reduce your professional, legal, or ethical responsibility." theme={theme} />
+            <Row icon="account-tie-outline" title="Professional accountability stays with the clinician." body="Using this app does not transfer or reduce your professional, legal, or ethical responsibility." theme={theme} />
             <Divider theme={theme} />
-            <Row icon="🏥" title="Local protocol takes precedence." body="Where your institution's protocol differs, follow your protocol and raise the discrepancy through the appropriate channel." theme={theme} />
+            <Row icon="hospital-building" title="Local protocol takes precedence." body="Where your institution's protocol differs, follow your protocol and raise the discrepancy through the appropriate channel." theme={theme} />
             <Divider theme={theme} />
-            <Row icon="👶" title="Paediatric use requires additional caution." body="Weight-based calculations for neonates and children carry higher risk. Always apply age-appropriate references and a pharmacist check." theme={theme} />
+            <Row icon="baby-face-outline" title="Paediatric use requires additional caution." body="Weight-based calculations for neonates and children carry higher risk. Always apply age-appropriate references and a pharmacist check." theme={theme} />
           </SECTION>
 
           {/* SpO2 targets */}
@@ -111,13 +113,14 @@ export default function ReferenceScreen() {
               ))}
             </View>
             <View style={[styles.warnNote, { backgroundColor: theme.warnSoft }]}>
-              <Text style={[styles.warnNoteText, { color: theme.text }]}>⚠ Titrate to the lowest flow that achieves the target. <Text style={{ fontWeight: '700' }}>Hyperoxia is harmful.</Text> Confirm unclear orders with the prescriber.</Text>
+              <MaterialCommunityIcons name="alert-outline" size={17} color={theme.warn} style={{ marginTop: 1 }} />
+              <Text style={[styles.warnNoteText, { color: theme.text }]}>Titrate to the lowest flow that achieves the target. <Text style={{ fontWeight: '700' }}>Hyperoxia is harmful.</Text> Confirm unclear orders with the prescriber.</Text>
             </View>
           </SECTION>
 
           {/* INFO CARD */}
-          <View style={[styles.infoCard, { backgroundColor: `rgba(76,141,255,0.08)`, borderColor: `rgba(76,141,255,0.15)` }]}>
-            <MaterialCommunityIcons name="information-outline" size={19} color="#4c8dff" style={{ marginTop: 1 }} />
+          <View style={[styles.infoCard, { backgroundColor: theme.primarySoft, borderColor: theme.border }]}>
+            <MaterialCommunityIcons name="information-outline" size={19} color={theme.accent} style={{ marginTop: 1 }} />
             <Text style={[styles.infoText, { color: theme.text }]}>SpO₂ targets and cannula gauge tool are available from the Home and Tools tabs — tap any tool card to open it.</Text>
           </View>
 
@@ -132,12 +135,12 @@ const styles = StyleSheet.create({
   sectionLabel: { fontSize: 11, fontWeight: '700', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 10 },
   card: { borderRadius: 20, borderWidth: 1, overflow: 'hidden' },
   row: { flexDirection: 'row', gap: 12, padding: 15, alignItems: 'flex-start' },
-  rowIcon: { fontSize: 17, marginTop: 1 },
+  rowIconWrap: { width: 30, height: 30, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   rowTitle: { fontSize: 13, fontWeight: '700', marginBottom: 3 },
   rowBody: { fontSize: 13, lineHeight: 19 },
   div: { height: 1, marginHorizontal: 15 },
   step: { flexDirection: 'row', gap: 12, padding: 15, alignItems: 'flex-start' },
-  stepNum: { width: 24, height: 24, borderRadius: 8, alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 },
+  stepNum: { width: 26, height: 26, borderRadius: 9, borderWidth: 1, alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 },
   stepNumText: { fontSize: 11, fontWeight: '700' },
   stepText: { flex: 1, fontSize: 13, lineHeight: 19 },
   spo2Grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9, padding: 12 },
@@ -145,8 +148,8 @@ const styles = StyleSheet.create({
   spo2Label: { fontSize: 10, fontWeight: '700', letterSpacing: 0.6, textTransform: 'uppercase' },
   spo2Range: { fontSize: 22, fontWeight: '700', fontFamily: Platform.select({ ios: 'Courier', android: 'monospace' }), marginTop: 6, lineHeight: 26 },
   spo2Sub: { fontSize: 11, marginTop: 4, lineHeight: 15 },
-  warnNote: { margin: 12, marginTop: 4, padding: 13, borderRadius: 12 },
-  warnNoteText: { fontSize: 12.5, lineHeight: 19 },
+  warnNote: { flexDirection: 'row', gap: 9, margin: 12, marginTop: 4, padding: 13, borderRadius: 12, alignItems: 'flex-start' },
+  warnNoteText: { flex: 1, fontSize: 12.5, lineHeight: 19 },
   infoCard: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: 14, borderWidth: 1, marginBottom: 14, alignItems: 'flex-start' },
   infoText: { flex: 1, fontSize: 12.5, lineHeight: 19 },
 });

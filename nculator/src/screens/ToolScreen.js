@@ -1,8 +1,9 @@
 import React, { useContext, useState, useCallback, useRef, useEffect } from 'react';
-import { View, Text, Animated, Easing, ScrollView, TouchableOpacity, Pressable, TextInput, StyleSheet, Platform } from 'react-native';
+import { View, Text, Animated, Easing, ScrollView, TouchableOpacity, Pressable, TextInput, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import { AppContext } from '../../App';
 
 const MONO = Platform.select({ ios: 'Courier', android: 'monospace' });
@@ -30,6 +31,7 @@ export default function ToolScreen({ route, navigation }) {
   const [titCheck, setTitCheck] = useState('');
   const prevValid = useRef({});
   const checkAnims = useRef({}).current;
+  const inputRefs = useRef({}).current;
   const s = styles(theme);
 
   const setValue = useCallback((key, val) => setValues(prev => ({ ...prev, [key]: val })), []);
@@ -45,6 +47,19 @@ export default function ToolScreen({ route, navigation }) {
   const isCannula = tool.id === 'cannula';
   const isTitration = tool.id === 'titration';
   const isWeight = tool.id === 'weight';
+
+  // Pristine = nothing typed yet. Don't greet the user with a red error card.
+  const isBlank = (f) => String(values[f.key] ?? '').trim() === '';
+  const hasInput = tool.fields.some(f => f.mode !== 'select' && !isBlank(f));
+  // Only flag an error once every required field is filled — incomplete isn't wrong.
+  const requiredFilled = tool.fields.every(f => f.mode === 'select' || /\(opt\)/.test(f.label) || !isBlank(f));
+  const showErr = hasInput && requiredFilled;
+  const resetAll = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setValues({});
+    setTitCheck('');
+    setOpenDrop(null);
+  };
 
   // Footer bar
   let footerVal = '0', footerUnit = '', footerOk = false;
@@ -71,7 +86,7 @@ export default function ToolScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={[s.safe, { backgroundColor: theme.bg }]}>
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
 
         {/* CENTERED HERO HEADER */}
         <View style={s.heroWrap}>
@@ -80,9 +95,17 @@ export default function ToolScreen({ route, navigation }) {
             start={{ x: 0.5, y: 0 }} end={{ x: 0.5, y: 1 }}
             style={s.heroGradient}>
             <View style={s.heroBackRow}>
-              <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()}>
+              <TouchableOpacity style={[s.backBtn, { backgroundColor: theme.s2, borderColor: theme.border }]} onPress={() => navigation.goBack()}
+                accessibilityRole="button" accessibilityLabel="Back" hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}>
                 <MaterialCommunityIcons name="arrow-left" size={22} color={theme.text} />
               </TouchableOpacity>
+              {hasInput && (
+                <TouchableOpacity style={[s.resetBtn, { backgroundColor: theme.s2, borderColor: theme.border }]} onPress={resetAll}
+                  accessibilityRole="button" accessibilityLabel="Clear all values" hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}>
+                  <MaterialCommunityIcons name="restore" size={17} color={theme.muted} />
+                  <Text style={[s.resetText, { color: theme.muted }]}>Clear</Text>
+                </TouchableOpacity>
+              )}
             </View>
             <View style={s.heroCentered}>
               <View style={[s.iconBadge, { ...(Platform.OS === 'web' ? { boxShadow: `0 0 0 1px rgba(${accentRgb},.4), 0 0 28px rgba(${accentRgb},.35), 0 0 56px rgba(${accentRgb},.14), inset 0 1px 0 rgba(255,255,255,.16)` } : { shadowColor: accentColor, shadowOpacity: 0.4, shadowRadius: 20, shadowOffset: { width: 0, height: 0 }, elevation: 8 }) }]}>
@@ -94,6 +117,7 @@ export default function ToolScreen({ route, navigation }) {
                 </LinearGradient>
               </View>
               <Text style={[s.toolName, { color: theme.text }]}>{tool.name}</Text>
+              <Text style={[s.toolDesc, { color: theme.muted }]}>{tool.desc}</Text>
             </View>
           </LinearGradient>
         </View>
@@ -136,7 +160,7 @@ export default function ToolScreen({ route, navigation }) {
           {/* HIGH-RISK BANNER */}
           {isTitration && (
             <View style={[s.banner, { backgroundColor: theme.dangerSoft, borderColor: theme.danger }]}>
-              <Text style={s.bannerEmoji}>⚠️</Text>
+              <MaterialCommunityIcons name="alert-octagon-outline" size={20} color={theme.danger} style={{ marginTop: -1 }} />
               <Text style={[s.bannerText, { color: theme.text }]}><Text style={{ color: theme.danger, fontWeight: '700' }}>High-risk.</Text> Verify independently and against your pump's drug library before infusing.</Text>
             </View>
           )}
@@ -185,7 +209,8 @@ export default function ToolScreen({ route, navigation }) {
               prevValid.current[field.key] = isValid;
 
               return (
-                <View key={field.key} style={[s.fieldCard, { backgroundColor: theme.s2, borderColor, shadowColor: isValid ? `rgba(${accentRgb},0.25)` : 'transparent', shadowOpacity: 1, shadowRadius: isValid ? 20 : 8, elevation: isValid ? 4 : 2 }]}>
+                <Pressable key={field.key} onPress={() => inputRefs[field.key]?.focus()}
+                  style={[s.fieldCard, { backgroundColor: theme.s2, borderColor, shadowColor: isValid ? `rgba(${accentRgb},0.25)` : 'transparent', shadowOpacity: 1, shadowRadius: isValid ? 20 : 8, elevation: isValid ? 4 : 2 }]}>
                   <View style={s.fieldTop}>
                     <Text style={[s.fieldLabel, { color: theme.muted }]}>{field.label}</Text>
                     {isValid && (
@@ -195,12 +220,13 @@ export default function ToolScreen({ route, navigation }) {
                     )}
                   </View>
                   <View style={s.fieldInputRow}>
-                    <TextInput style={[s.fieldInput, { color: theme.text }]} value={val} onChangeText={v => setValue(field.key, v)}
+                    <TextInput ref={r => { inputRefs[field.key] = r; }} style={[s.fieldInput, { color: theme.text }]} value={val} onChangeText={v => setValue(field.key, v)}
+                      accessibilityLabel={field.unit ? `${field.label} in ${field.unit}` : field.label}
                       keyboardType={field.mode === 'numeric' ? 'number-pad' : 'decimal-pad'}
                       placeholder="0" placeholderTextColor={theme.muted} returnKeyType="done" />
                     {field.unit ? <Text style={[s.fieldUnit, { color: theme.muted }]}>{field.unit}</Text> : null}
                   </View>
-                </View>
+                </Pressable>
               );
             })}
           </View>
@@ -214,12 +240,17 @@ export default function ToolScreen({ route, navigation }) {
           )}
 
           {/* RESULT */}
-          {result?.err ? (
+          {result?.err ? (showErr ? (
             <View style={[s.errCard, { backgroundColor: theme.dangerSoft, borderColor: theme.danger }]}>
-              <Text style={s.errEmoji}>⚠</Text>
+              <MaterialCommunityIcons name="alert-circle-outline" size={19} color={theme.danger} style={{ marginTop: -1 }} />
               <Text style={[s.errText, { color: theme.danger }]}>{result.err}</Text>
             </View>
-          ) : result && (
+          ) : (
+            <View style={[s.emptyCard, { borderColor: theme.border }]}>
+              <MaterialCommunityIcons name="calculator-variant-outline" size={22} color={theme.muted} />
+              <Text style={[s.emptyText, { color: theme.muted }]}>{result.err}</Text>
+            </View>
+          )) : result && (
             <View style={[s.resultCard, { backgroundColor: theme.s1, borderColor: `rgba(${accentRgb},0.2)`, shadowColor: `rgba(${accentRgb},0.1)`, shadowOpacity: 1, shadowRadius: 20, elevation: 4 }]}>
 
               {/* Oxygen assessment */}
@@ -367,7 +398,7 @@ export default function ToolScreen({ route, navigation }) {
               )}
 
               {/* Warn */}
-              {result.warn ? <View style={[s.warnCard, { backgroundColor: theme.warnSoft, marginTop: 12 }]}><Text style={[s.warnText, { color: theme.warn }]}>⚠ {result.warn}</Text></View> : null}
+              {result.warn ? <View style={[s.warnCard, { backgroundColor: theme.warnSoft, marginTop: 12 }]}><MaterialCommunityIcons name="alert-outline" size={17} color={theme.warn} /><Text style={[s.warnText, { color: theme.warn, flex: 1 }]}>{result.warn}</Text></View> : null}
             </View>
           )}
 
@@ -391,13 +422,16 @@ export default function ToolScreen({ route, navigation }) {
               <Text style={[s.stickyLabel, { color: 'rgba(0,0,0,0.6)' }]}>Result</Text>
               <Text style={[s.stickyVal, { color: '#000' }]}>{footerVal} <Text style={{ fontSize: 18, fontWeight: '400' }}>{footerUnit}</Text></Text>
             </View>
-            <Text style={{ fontSize: 28, color: 'rgba(0,0,0,0.5)' }}>✓</Text>
+            <MaterialCommunityIcons name="check-circle" size={30} color="rgba(0,0,0,0.45)" />
           </>) : (
-            <Text style={[s.stickyEmpty, { color: theme.muted }]}>Enter values above to calculate</Text>
+            <>
+              <MaterialCommunityIcons name="gesture-tap" size={20} color={theme.muted} />
+              <Text style={[s.stickyEmpty, { color: theme.muted }]}>{hasInput ? 'Complete the fields above to calculate' : 'Enter values above to calculate'}</Text>
+            </>
           )}
         </Animated.View>
 
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -406,16 +440,18 @@ const styles = (theme) => StyleSheet.create({
   safe: { flex: 1 },
   heroWrap: { },
   heroGradient: { paddingBottom: 4 },
-  heroBackRow: { flexDirection: 'row', paddingHorizontal: 14, paddingTop: 6, paddingBottom: 8 },
-  backBtn: { width: 42, height: 42, borderRadius: 21, backgroundColor: 'rgba(255,255,255,0.09)', alignItems: 'center', justifyContent: 'center' },
-  heroCentered: { alignItems: 'center', paddingHorizontal: 20, paddingBottom: 24 },
+  heroBackRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingTop: 6, paddingBottom: 8 },
+  backBtn: { width: 42, height: 42, borderRadius: 21, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  resetBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 36, paddingHorizontal: 13, borderRadius: 18, borderWidth: 1 },
+  resetText: { fontSize: 12.5, fontWeight: '600' },
+  heroCentered: { alignItems: 'center', paddingHorizontal: 20, paddingBottom: 20 },
   iconBadge: { width: 72, height: 72, borderRadius: 22, overflow: 'hidden' },
   iconBadgeGrad: { width: 72, height: 72, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   toolName: { fontSize: 23, fontWeight: '700', letterSpacing: -0.3, marginTop: 14, textAlign: 'center' },
+  toolDesc: { fontSize: 13, marginTop: 4, textAlign: 'center' },
   scroll: { flex: 1 },
   content: { padding: 16, paddingBottom: 24 },
   banner: { flexDirection: 'row', gap: 11, padding: 14, borderRadius: 16, borderWidth: 1, marginBottom: 16, alignItems: 'flex-start' },
-  bannerEmoji: { fontSize: 18 },
   bannerText: { flex: 1, fontSize: 13, lineHeight: 19 },
   fields: { gap: 10, marginBottom: 14 },
   fieldCard: { borderRadius: 18, borderWidth: 1, padding: 14, shadowOffset: { width: 0, height: 2 } },
@@ -440,7 +476,8 @@ const styles = (theme) => StyleSheet.create({
   dropOption: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, paddingVertical: 13, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgba(128,128,128,0.15)' },
   dropOptionText: { flex: 1, fontSize: 14, lineHeight: 19 },
   errCard: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: 16, borderWidth: 1, alignItems: 'flex-start', marginBottom: 14 },
-  errEmoji: { fontSize: 18 },
+  emptyCard: { flexDirection: 'row', gap: 12, padding: 16, borderRadius: 16, borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', marginBottom: 14 },
+  emptyText: { flex: 1, fontSize: 13, lineHeight: 19 },
   errText: { flex: 1, fontSize: 13, fontWeight: '500', lineHeight: 19 },
   resultCard: { borderRadius: 22, borderWidth: 1, paddingVertical: 24, paddingHorizontal: 20, marginBottom: 14, shadowOffset: { width: 0, height: 8 } },
   resultLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 6 },
@@ -457,7 +494,7 @@ const styles = (theme) => StyleSheet.create({
   noteText: { fontSize: 11, lineHeight: 17 },
   pickCard: { padding: 12, borderRadius: 12, marginTop: 10 },
   pickText: { fontSize: 13, fontWeight: '600', lineHeight: 18 },
-  warnCard: { padding: 12, borderRadius: 12, marginTop: 10 },
+  warnCard: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, padding: 12, borderRadius: 12, marginTop: 10 },
   warnText: { fontSize: 13, fontWeight: '600', lineHeight: 18 },
   gaugeTable: { marginTop: 16, borderRadius: 14, overflow: 'hidden', borderWidth: 1 },
   gaugeHeader: { flexDirection: 'row', paddingHorizontal: 14, paddingVertical: 8, backgroundColor: 'rgba(128,128,128,0.06)' },
@@ -483,5 +520,5 @@ const styles = (theme) => StyleSheet.create({
   stickyFooter: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 20, paddingVertical: 14, paddingBottom: Platform.OS === 'ios' ? 10 : 14, borderTopWidth: 1 },
   stickyLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' },
   stickyVal: { fontSize: 32, fontWeight: '700', fontFamily: MONO, letterSpacing: -0.5 },
-  stickyEmpty: { fontSize: 14 },
+  stickyEmpty: { flex: 1, fontSize: 14 },
 });
